@@ -7,6 +7,10 @@ import prisma from 'src/prisma/client';
 export class ChatService {
   constructor(private commonService: CommonService) {}
 
+  async getOneChatMsg(args: Prisma.ChatFindFirstArgs) {
+    return prisma.chat.findFirst(args);
+  }
+
   async getChat(args: Prisma.ChatFindManyArgs) {
     return prisma.chat.findMany(args);
   }
@@ -20,5 +24,12 @@ export class ChatService {
 
   async createChatMsg(data: Prisma.ChatUncheckedCreateInput) {
     return prisma.chat.create({ data });
+  }
+
+  async updateChatMsg(
+    where: Prisma.ChatWhereUniqueInput,
+    data: Prisma.ChatUpdateInput,
+  ) {
+    return prisma.chat.update({ where, data });
   }
 }

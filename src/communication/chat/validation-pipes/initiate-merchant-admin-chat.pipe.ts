@@ -3,30 +3,40 @@ import { WsException } from '@nestjs/websockets';
 import { ChatType, Prisma, UserRole } from '@prisma/client';
 import * as _ from 'lodash';
 import { MerchantRegistration2Service } from 'src/user-entites/merchant/merchant-registration/merchant-registration2.service';
-import { initialAdminMerchantChat, validateObject } from 'src/validations';
+import {
+  initialAdminMerchantChat,
+  reinitiateMerchantAdminChat,
+  validateObject,
+} from 'src/validations';
 
 @Injectable()
-export class ValidateAndTransformMerchantAdminChatOptions
+export class ValidateAndTransformInitialMerchanAdminChat
   implements PipeTransform
 {
   merchantRegistrationService: MerchantRegistration2Service;
 
-  constructor() {
+  constructor(private chatType: 'initiate' | 'reinitiate') {
     this.merchantRegistrationService = new MerchantRegistration2Service();
   }
 
   async transform(value: any, metadata: ArgumentMetadata) {
     if (metadata.type !== 'body') return value;
-    const options = _.pick(value, ['limit', 'merchantRegistrationId', 'role']);
+    const options = _.pick(value, [
+      `${this.chatType === 'reinitiate' ? 'cursor' : 'limit'}`,
+      'merchantRegistrationId',
+      'role',
+    ]);
 
-    const { error, message } = await validateObject(
-      options,
-      initialAdminMerchantChat,
-      {
-        whitelist: true,
-        forbidNonWhitelisted: true,
-      },
-    );
+    const { error, message } =
+      this.chatType === 'reinitiate'
+        ? await validateObject(options, reinitiateMerchantAdminChat, {
+            whitelist: true,
+            forbidNonWhitelisted: true,
+          })
+        : await validateObject(options, initialAdminMerchantChat, {
+            whitelist: true,
+            forbidNonWhitelisted: true,
+          });
 
     if (error) throw new WsException(message);
     const isMerchantRole = options?.role === UserRole.merchant;
@@ -49,24 +59,41 @@ export class ValidateAndTransformMerchantAdminChatOptions
       merchantId = registrationDetails.userId;
     }
 
+    const reinitiateQueryOptions: Prisma.ChatFindManyArgs =
+      this.chatType === 'reinitiate'
+        ? {
+            skip: 1,
+            cursor: {
+              id: options.cursor,
+            },
+          }
+        : {};
     const chatQuery: Prisma.ChatFindManyArgs = {
       where: {
         chatType: ChatType.merchant_registration,
         entityModelId: merchantRegistrationId,
       },
       orderBy: {
-        messageTime: 'desc',
+        sentTime: 'desc',
       },
+      ...reinitiateQueryOptions,
     };
+
+    const paginationOptions =
+      this.chatType === 'reinitiate'
+        ? {}
+        : {
+            paginationOptions: {
+              limit: options.limit,
+            },
+          };
 
     return {
       chatQuery,
       user: value.user,
       merchantRegistrationId,
       role: value.role,
-      paginationOptions: {
-        limit: options.limit,
-      },
+      ...paginationOptions,
       merchantId,
     };
   }

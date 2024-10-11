@@ -11,18 +11,19 @@ model Notification {
 }
 
 model Chat {
-  id                Int           @id @default(autoincrement())
-  message           String
-  senderMsgStatus   ChatMsgStatus @default(sent)
-  receivedMsgStatus ChatMsgStatus @default(notReceived)
-  sender            User          @relation("Sender", fields: [senderId], references: [id])
-  senderId          Int
-  receiver          User?         @relation("Receiver", fields: [receiverId], references: [id])
-  receiverId        Int?
-  chatType          ChatType
-  entityModelId     Int?
-  messageTime       DateTime
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  archive           Boolean       @default(false)
+  id            Int           @id @default(autoincrement())
+  message       String
+  status        ChatMsgStatus @default(sent)
+  sender        User          @relation("Sender", fields: [senderId], references: [id])
+  senderId      Int
+  receiver      User?         @relation("Receiver", fields: [receiverId], references: [id])
+  receiverId    Int?
+  chatType      ChatType
+  entityModelId Int?
+  sentTime      DateTime
+  deliveryTime  DateTime?
+  readTime      DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  archive       Boolean       @default(false)
 }

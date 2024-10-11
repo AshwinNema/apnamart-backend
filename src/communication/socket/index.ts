@@ -1,5 +1,7 @@
+import { Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import { BaseWsExceptionFilter, WsException } from '@nestjs/websockets';
+import { ChatWebSocket } from 'src/utils/types';
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { WsException } from '@nestjs/websockets';
 import { Prisma, TokenTypes, UserRole } from '@prisma/client';
 import { matchUserRoles } from 'src/auth/role/role.guard';
 import {
@@ -7,6 +9,26 @@ import {
   verifyTokenErrs,
 } from 'src/auth/token/token-verification.service';
 import { UserInterface } from 'src/interfaces';
+
+@Catch(WsException, HttpException)
+export class WebsocketExceptionFilter extends BaseWsExceptionFilter {
+  constructor(private eventName: string) {
+    super();
+  }
+  catch(exception: WsException, host: ArgumentsHost) {
+    const client = host.switchToWs().getClient() as ChatWebSocket;
+    const error = exception.getError();
+    client.send(
+      JSON.stringify({
+        event: 'error',
+        data: {
+          event: this.eventName,
+          error,
+        },
+      }),
+    );
+  }
+}
 
 @Injectable()
 export class SocketAuthValidationPipe implements PipeTransform {

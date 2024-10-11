@@ -36,6 +36,6 @@ export class MerchantRegistration2Service {
       );
     }
 
-    return updatedRegistration
+    return updatedRegistration;
   }
 }
