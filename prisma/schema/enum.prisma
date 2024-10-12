@@ -26,3 +26,28 @@ enum AddressType {
   work
   others
 }
+
+enum NotificationEntity {
+  merchant_registration
+}
+
+enum ChatType {
+  merchant_registration
+}
+
+enum CommunicationStatus {
+  sent
+  delivered
+  read
+}
+
+enum ChatMsgStatus {
+  sent
+  delivered
+  read
+}
+
+enum MerchantRegistrationStatus {
+  review_by_admin
+  completed
+}

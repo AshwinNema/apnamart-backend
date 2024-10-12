@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes, passwordValidation } from 'src/utils';
+import { LatLng } from './common.validation';
 
 export class ProfilePhotoValidation {
   @IsFile()
@@ -45,13 +46,7 @@ export class GetAddress {
   lng: number;
 }
 
-export class UpdateUserAddress {
-  @IsNumber()
-  latitude: number;
-
-  @IsNumber()
-  longtitude: number;
-
+export class UpdateUserAddress extends LatLng {
   @IsEnum(AddressType)
   @IsString()
   addressType: AddressType;

@@ -4,25 +4,15 @@ import {
   IsArray,
   IsInt,
   IsNumber,
-  Max,
   Min,
   ValidateNested,
 } from 'class-validator';
+import { LatLng } from './common.validation';
 
-export class DeliveryAreaValidation {
+export class DeliveryAreaValidation extends LatLng {
   @Min(1000, { message: 'Area must be atleast 1 km in radius' })
   @IsNumber()
   radius: number;
-
-  @Min(-90)
-  @Max(90)
-  @IsNumber()
-  latitude: number;
-
-  @Min(-180)
-  @Max(180)
-  @IsNumber()
-  longtitude: number;
 }
 
 export class UpdateAreaValidation extends DeliveryAreaValidation {

@@ -66,24 +66,4 @@ export class RefreshTokenValidator {
   token: string;
 }
 
-export class GoogleAuth {
-  @IsEnum(UserRole)
-  @IsString()
-  role: UserRole;
-
-  @IsString()
-  token: string;
-}
-
-export class TwitterAccessToken {
-  @IsString()
-  oauth_token: string;
-
-  @IsString()
-  oauth_verifier: string;
-
-  @IsEnum(UserRole)
-  @IsString()
-  @IsNotEmpty()
-  role: UserRole;
-}
+export * from './other-validations';

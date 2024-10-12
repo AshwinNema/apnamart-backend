@@ -12,6 +12,7 @@ import { AllExceptionsFilter } from './middlewares/all-exception.filter';
 import { LoggingInterceptor } from './logger/logger.interceptor';
 import { ValidationError } from 'class-validator';
 import { processNestedValidationError } from './utils';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -27,6 +28,8 @@ async function bootstrap() {
 
   app.use(helmet());
   app.use(compression());
+
+  app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

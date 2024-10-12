@@ -4,10 +4,10 @@ import axios from 'axios';
 import addOAuthInterceptor, { OAuthInterceptorConfig } from 'axios-oauth-1.0a';
 import endpoints from 'src/utils/endpoints';
 import {
-  accessTokenResponse,
-  parseTokenResponse,
-  requestTokenResponse,
-} from './util';
+  twitterAccessTokenResponse,
+  parseTwitterTokenResponse,
+  twitterRequestTokenResponse,
+} from '../utils';
 import { TwitterAccessToken } from 'src/validations';
 import { NextFunction } from 'express';
 import * as _ from 'lodash';
@@ -39,9 +39,8 @@ export class TwitterAuthService {
       consumer_key,
       consumer_secret,
     });
-    const parsedResponse: requestTokenResponse = parseTokenResponse(
-      token.data,
-    ) as requestTokenResponse;
+    const parsedResponse: twitterRequestTokenResponse =
+      parseTwitterTokenResponse(token.data) as twitterRequestTokenResponse;
     if (parsedResponse.oauth_callback_confirmed !== 'true') {
       throw new BadRequestException('Something went wrong');
     }
@@ -57,9 +56,9 @@ export class TwitterAuthService {
     const response = await axios.post(
       endpoints.twitterAccessToken(twitterQuery),
     );
-    const parsedResponse = parseTokenResponse(
+    const parsedResponse = parseTwitterTokenResponse(
       response.data,
-    ) as accessTokenResponse;
+    ) as twitterAccessTokenResponse;
     req.body['oauth_token'] = parsedResponse.oauth_token;
     req.body['oauth_token_secret'] = parsedResponse.oauth_token_secret;
     req.body['user_id'] = parsedResponse.user_id;

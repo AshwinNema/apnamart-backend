@@ -14,6 +14,7 @@ import { GoogleAuthService } from './google-auth/google-auth.service';
 import { TwitterAuthService } from './twitter-auth/twitter-auth.service';
 import { TwitterAcessStrategy } from './jwt/twitter.jwt';
 import { Auth2Service } from './auth2.service';
+import { TokenVerificationService } from './token/token-verification.service';
 
 @Module({
   imports: [
@@ -48,8 +49,9 @@ import { Auth2Service } from './auth2.service';
     GoogleAuthService,
     TwitterAuthService,
     Auth2Service,
+    TokenVerificationService,
   ],
   controllers: [AuthController],
-  exports: [TokenService, TokenService2],
+  exports: [TokenService, TokenService2, TokenVerificationService],
 })
 export class AuthModule {}

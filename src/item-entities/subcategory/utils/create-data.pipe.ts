@@ -16,7 +16,7 @@ export const subCategoryCreateProcessor = (
 
 const validatePipeData = async (data: SubCategoryValidator) => {
   const categoryData = await prisma.category.findUnique({
-    where: { id: data.categoryId,  },
+    where: { id: data.categoryId },
   });
   if (!categoryData) {
     throw new NotFoundException('Category not found');
@@ -24,7 +24,7 @@ const validatePipeData = async (data: SubCategoryValidator) => {
 
   if (
     await prisma.subCategory.findFirst({
-      where: {  name: data.name, categoryId: data.categoryId },
+      where: { name: data.name, categoryId: data.categoryId },
     })
   ) {
     throw new BadRequestException(

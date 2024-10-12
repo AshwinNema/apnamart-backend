@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
 import { GoogleAuth } from 'src/validations';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user-entites/user/user.service';
-import { UserRole } from '@prisma/client';
 import { UserInterface } from 'src/interfaces';
 import { TokenService2 } from '../token/token2.service';
+import { getLoginOptions, otherAuthChecks } from '../utils';
 
 // checks in the function -
 // 1. If user is not present in the system and user role is admin, then we throw an error because admin creation is not allowed
@@ -18,7 +18,7 @@ export class GoogleAuthService {
     private userService: UserService,
   ) {}
 
-  async googleLoginSignUp({ token, role }: GoogleAuth) {
+  async googleLoginSignUp({ token, role, accessType }: GoogleAuth) {
     const googleCredentails = this.configService.get('google');
 
     const oauth2Client = new google.auth.OAuth2(
@@ -37,22 +37,12 @@ export class GoogleAuthService {
     const profileData = profileDetails?.data;
     const email = profileData?.emailAddresses?.[0]?.value;
     const userName = profileData?.names?.[0]?.displayName || 'New User';
-    const user: UserInterface = await this.userService.findUnique({ email });
+    const user: UserInterface = await this.userService.findUnique(
+      { email },
+      getLoginOptions(role),
+    );
 
-    // Check as per point 1.
-    if (!user && role === UserRole.admin) {
-      throw new BadRequestException('Admin user not present in the system');
-    }
-
-    // Check as per point 2.
-    if (
-      user &&
-      role === UserRole.admin &&
-      !user.userRoles.includes(UserRole.admin)
-    ) {
-      throw new BadRequestException('Existing user cannot be made an admin');
-    }
-
+    otherAuthChecks(accessType, user, role);
     return this.tokenService.generateDifferentLoginToken(user, {
       role,
       name: userName,

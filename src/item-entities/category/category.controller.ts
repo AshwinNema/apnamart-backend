@@ -6,8 +6,6 @@ import {
   Put,
   Param,
   ParseIntPipe,
-  UseInterceptors,
-  UploadedFile,
   Get,
   Query,
   Delete,
@@ -16,13 +14,13 @@ import { UserRole } from '@prisma/client';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Roles } from 'src/auth/role/role.guard';
 import {
+  CategoryFileUpload,
   CategoryValidator,
   CreateCatValidation,
   QueryCategories,
   SearchByName,
 } from 'src/validations';
 import { CategoryService } from './category.service';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { SkipAccessAuth } from 'src/auth/jwt/access.jwt';
 import { CreateCategoryData } from 'src/interfaces';
 import { MultiPartDataPipe } from 'src/pipes';
@@ -58,12 +56,12 @@ export class CategoryController {
 
   @Put('image/:id')
   @Roles(UserRole.admin)
-  @UseInterceptors(FileInterceptor('file'))
+  @FormDataRequest()
   updateCategoryImage(
-    @UploadedFile() file: Express.Multer.File,
+    @Body() body: CategoryFileUpload,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.categoryService.updateCategoryImg(id, file);
+    return this.categoryService.updateCategoryImg(id, body.file);
   }
 
   @Put(':id')

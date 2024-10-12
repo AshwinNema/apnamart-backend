@@ -1,11 +1,24 @@
 model MerchantDetails {
-  id                Int      @id @default(autoincrement())
-  isMerchantBlocked Boolean  @default(false)
-  user              User     @relation(fields: [userId], references: [id])
-  userId            Int      @unique
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  archive           Boolean  @default(false)
+  id                   Int                        @id @default(autoincrement())
+  isMerchantBlocked    Boolean                    @default(false)
+  registrationStatus   MerchantRegistrationStatus @default(review_by_admin)
+  user                 User                       @relation(fields: [userId], references: [id])
+  userId               Int                        @unique
+  latitude             Decimal
+  longtitude           Decimal
+  addressLine1         String
+  addressLine2         String
+  pinCode              Int
+  bankAcNo             String
+  gstIn                String
+  panCard              String
+  photo                String
+  cloudinary_public_id String
+  name                 String
+  description          String
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  archive              Boolean                    @default(false)
 }
 
 model ProductPhoto {
@@ -31,7 +44,6 @@ model Product {
   rating         Float              @default(0)
   totalReviewers Int                @default(0)
   totalRatings   Int                @default(0)
-  quantity       Int                @default(0)
   item           Item               @relation(fields: [itemId], references: [id])
   itemId         Int
   filterOptions  ItemFilterOption[]

@@ -7,8 +7,6 @@ import {
   Put,
   Param,
   ParseIntPipe,
-  UseInterceptors,
-  UploadedFile,
   Query,
   Delete,
 } from '@nestjs/common';
@@ -18,12 +16,12 @@ import { FormDataRequest } from 'nestjs-form-data';
 import {
   CreateSubCatValidation,
   QuerySubCategories,
+  SubcategoryUploadFile,
   SubCategoryValidator,
 } from 'src/validations/subcategory.validation';
 import { SubcategoryService } from './subcategory.service';
 import { SubCategoryInterface } from 'src/interfaces';
 import { SkipAccessAuth } from 'src/auth/jwt/access.jwt';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { MultiPartDataPipe } from 'src/pipes';
 import { RequestProcessor } from 'src/decorators';
 import {
@@ -33,7 +31,6 @@ import {
   subCategoryCreateProcessor,
   UpdateSubCatValidator,
 } from './utils';
-import * as _ from 'lodash';
 import { CommonService } from 'src/common/common.service';
 import { SearchByName } from 'src/validations';
 @Controller('subcategory')
@@ -66,12 +63,12 @@ export class SubcategoryController {
 
   @Put('image/:id')
   @Roles(UserRole.admin)
-  @UseInterceptors(FileInterceptor('file'))
+  @FormDataRequest()
   updateSubCategoryImage(
-    @UploadedFile() file: Express.Multer.File,
+    @Body() body: SubcategoryUploadFile,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.subCategoryService.updateSubcategoryImg(id, file);
+    return this.subCategoryService.updateSubcategoryImg(id, body.file);
   }
 
   @Put(':id')

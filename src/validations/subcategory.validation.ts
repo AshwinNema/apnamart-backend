@@ -31,11 +31,7 @@ export class SubCatListValidator {
   categoryId: number;
 }
 
-export class CreateSubCatValidation {
-  @IsString()
-  @IsNotEmpty()
-  data: string;
-
+export class SubcategoryUploadFile {
   @IsFile()
   @MaxFileSize(4e6, {
     message: 'Maximum size of the file should be 4 mega byte',
@@ -44,4 +40,10 @@ export class CreateSubCatValidation {
     message: 'File must be an image',
   })
   file: Express.Multer.File;
+}
+
+export class CreateSubCatValidation extends SubcategoryUploadFile {
+  @IsString()
+  @IsNotEmpty()
+  data: string;
 }

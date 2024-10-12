@@ -25,13 +25,10 @@ import { getFilterMap, getPrismaQuery } from './data-transformers';
 // 5. While deleting filters we chck that that filter should be present in the system
 
 export class UpdateItemValidator implements PipeTransform {
-  async transform(
-    value,
-    metadata: ArgumentMetadata,
-  ) {
+  async transform(value, metadata: ArgumentMetadata) {
     if (metadata.type !== 'custom') return value;
+    const { body } = value;
     let {
-      body,
       params: { id },
     } = value;
     id = parseInt(id);
