@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, Min, ValidateIf } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Min, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export enum adminMerchantChatRole {
@@ -33,6 +33,7 @@ export class queryAdminMerchantChatMsgs {
 }
 
 export class reinitiateMerchantAdminChat {
+  @IsOptional()
   @Min(1)
   @IsInt()
   cursor: number;

@@ -49,7 +49,7 @@ export const setupSocketConnection = async (
 
   return {
     ...chatData,
-    event: merchantAdminChatEvents.initiateChat,
+    event: data.event,
   };
 };
 

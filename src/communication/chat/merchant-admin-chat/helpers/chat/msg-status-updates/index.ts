@@ -17,21 +17,18 @@ export const markMsgsAsDeliveredAndGetUpdatedList = async (
     deliveryTime,
   );
   if (statusUpdateIdList.length) {
-    const updatedIds = (
-      await transaction.chat.updateMany({
-        where: {
-          id: {
-            in: statusUpdateIdList,
-          },
-          status: ChatMsgStatus.sent,
+    await transaction.chat.updateMany({
+      where: {
+        id: {
+          in: statusUpdateIdList,
         },
-        data: {
-          status: ChatMsgStatus.delivered,
-          deliveryTime,
-        },
-      })
-    ).map((msg) => msg.id);
-    statusUpdateIdList = [...updatedIds];
+        status: ChatMsgStatus.sent,
+      },
+      data: {
+        status: ChatMsgStatus.delivered,
+        deliveryTime,
+      },
+    });
   }
   const msgSender = clientDetails.isClientMerchant ? 'admin' : 'merchant';
   statusUpdateIdList.length &&

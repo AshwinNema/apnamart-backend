@@ -8,6 +8,7 @@ import {
   reinitiateMerchantAdminChat,
   validateObject,
 } from 'src/validations';
+import { merchantAdminChatEvents } from '../utils';
 
 @Injectable()
 export class ValidateAndTransformInitialMerchanAdminChat
@@ -63,11 +64,10 @@ export class ValidateAndTransformInitialMerchanAdminChat
       this.chatType === 'reinitiate'
         ? {
             skip: 1,
-            cursor: {
-              id: options.cursor,
-            },
           }
         : {};
+    if (options.cursor) reinitiateQueryOptions.cursor = { id: options.cursor };
+
     const chatQuery: Prisma.ChatFindManyArgs = {
       where: {
         chatType: ChatType.merchant_registration,
@@ -95,6 +95,10 @@ export class ValidateAndTransformInitialMerchanAdminChat
       role: value.role,
       ...paginationOptions,
       merchantId,
+      event:
+        this.chatType === 'initiate'
+          ? merchantAdminChatEvents.initiateChat
+          : merchantAdminChatEvents.reinitiateMerchantAdminChat,
     };
   }
 }

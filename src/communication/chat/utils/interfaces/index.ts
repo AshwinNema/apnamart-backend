@@ -48,6 +48,9 @@ export interface adminMerchantChat {
     paginationOptions?: {
       limit: number;
     };
+    event:
+      | merchantAdminChatEvents.initiateChat
+      | merchantAdminChatEvents.reinitiateMerchantAdminChat;
   };
 }
 

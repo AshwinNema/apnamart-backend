@@ -70,6 +70,7 @@ export const queryChatMsgs = async (
       cursor: {
         id: details.cursor,
       },
+      orderBy: { sentTime: 'desc' },
       skip: 1,
     },
     {

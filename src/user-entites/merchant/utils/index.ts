@@ -40,6 +40,7 @@ export const getQueryRegistrationsArgs = (
       include: {
         user: {
           select: {
+            id: true,
             name: true,
           },
         },
