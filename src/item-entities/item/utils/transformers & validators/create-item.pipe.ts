@@ -9,28 +9,15 @@ import prisma from 'src/prisma/client';
 import { CreateItemValidator } from 'src/validations';
 
 const validateCreateItem = async (data: CreateItemValidator) => {
-  const subCategoryData = await prisma.subCategory.findUnique({
-    where: { id: data.subCategoryId },
-    include: {
-      category: {
-        select: {
-          archive: true,
-        },
-      },
-    },
+  const categoryData = await prisma.category.findUnique({
+    where: { id: data.categoryId },
   });
-  if (!subCategoryData) {
+  if (!categoryData) {
     throw new NotFoundException('Sub category not found');
   }
 
-  if (subCategoryData.category.archive) {
-    throw new BadRequestException(
-      'Category associated with the subcategory was not found',
-    );
-  }
-
   const duplicate = await prisma.item.findFirst({
-    where: { subCategoryId: data.subCategoryId },
+    where: { categoryId: data.categoryId, name: data.name },
   });
   if (duplicate) {
     throw new NotFoundException(

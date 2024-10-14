@@ -12,8 +12,8 @@ import * as _ from 'lodash';
 @Injectable()
 export class ProductCreateTransformer implements PipeTransform {
   processData(data, user: UserInterface) {
-    data.subCategory = {
-      connect: { id: data.subCategoryId },
+    data.item = {
+      connect: { id: data.itemId },
     };
     data.user = {
       connect: { id: user.id },
@@ -24,15 +24,15 @@ export class ProductCreateTransformer implements PipeTransform {
       };
     }
 
-    return _.omit(data, ['subCategoryId', 'merchant']);
+    return _.omit(data, ['categoryId', 'merchant']);
   }
 
   async validate(data: Product) {
-    const subCategory = await prisma.subCategory.findUnique({
-      where: { id: data.subCategoryId },
+    const item = await prisma.item.findUnique({
+      where: { id: data.itemId },
     });
-    if (!subCategory) {
-      throw new NotFoundException('Sub Category not found');
+    if (!item) {
+      throw new NotFoundException('Item not found');
     }
   }
 

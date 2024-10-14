@@ -27,15 +27,9 @@ export const getQueryItemArgs = (
     {
       where,
       include: {
-        subCategory: {
-          include: {
-            category: {
-              select: {
-                name: true,
-                id: true,
-              },
-            },
-          },
+        category: {
+          name: true,
+          id: true,
         },
       },
     },

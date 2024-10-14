@@ -12,7 +12,7 @@ export class ItemService {
     private itemFilterService: ItemFilterService,
   ) {}
 
-  async getOneItem(where, otherOptions?: object) {
+  async getOneItem(where:Prisma.ItemWhereInput, otherOptions?: object) {
     return prisma.item.findFirst({ where, ...otherOptions });
   }
 

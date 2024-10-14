@@ -1,26 +1,11 @@
 model Category {
-  id                   Int           @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   name                 String //@unique
   photo                String
   cloudinary_public_id String
-  subCategory          SubCategory[]
-  user                 User          @relation(fields: [createdBy], references: [id])
-  createdBy            Int
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-  archive              Boolean       @default(false)
-}
-
-model SubCategory {
-  id                   Int      @id @default(autoincrement())
-  name                 String
-  photo                String
-  cloudinary_public_id String
-  category             Category @relation(fields: [categoryId], references: [id])
-  categoryId           Int
   user                 User     @relation(fields: [createdBy], references: [id])
-  items                Item[]
   createdBy            Int
+  items                Item[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   archive              Boolean  @default(false)
@@ -31,11 +16,11 @@ model Item {
   name                 String
   photo                String
   cloudinary_public_id String
-  subCategory          SubCategory  @relation(fields: [subCategoryId], references: [id])
-  subCategoryId        Int
   user                 User         @relation(fields: [createdBy], references: [id])
   product              Product[]
   filters              ItemFilter[]
+  category             Category     @relation(fields: [categoryId], references: [id])
+  categoryId           Int
   createdBy            Int
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt

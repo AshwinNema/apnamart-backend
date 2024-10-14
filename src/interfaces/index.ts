@@ -24,11 +24,6 @@ export interface CreateCategoryData {
   name: string;
 }
 
-export interface SubCategoryInterface {
-  name: string;
-  categoryId: number;
-}
-
 export interface CreateFilterOption {
   name: string;
   createdBy: number;
@@ -42,6 +37,6 @@ export interface CreateFilter {
 
 export interface CreateItemData {
   name: string;
-  subCategoryId: number;
+  categoryId: number; 
   filters: CreateFilter[];
 }

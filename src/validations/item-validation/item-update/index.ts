@@ -25,7 +25,7 @@ export class UpdateItem {
   @IsInt()
   @Min(1)
   @IsOptional()
-  subCategoryId: number;
+  categoryId: number;
 
   @ArrayUnique((option) => option.name, {
     message: 'All filter names should be unique',

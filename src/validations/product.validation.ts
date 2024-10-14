@@ -26,7 +26,7 @@ export class Product {
   description: string;
 
   @IsInt()
-  subCategoryId: number;
+  itemId: number;
 
   @IsPositive()
   price: number;

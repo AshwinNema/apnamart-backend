@@ -8,7 +8,7 @@ export class UpdateItemPayloadTransformPipe implements PipeTransform {
     if (metadata.type !== 'custom') return value;
 
     const body: UpdateItem = value.body;
-    const mainDetails = _.pick(body, ['name', 'subCategoryId']);
+    const mainDetails = _.pick(body, ['name', 'categoryId']);
     const itemId = parseInt(value.params.id);
     const user: UserInterface = value.user;
     const createdBy = user.id;

@@ -49,7 +49,7 @@ export class CreateItemValidator {
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  subCategoryId: number;
+  categoryId: number;
 
   @ArrayMinSize(1)
   @ArrayUnique((option) => option.name, {
