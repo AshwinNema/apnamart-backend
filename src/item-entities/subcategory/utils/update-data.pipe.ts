@@ -11,8 +11,8 @@ import prisma from 'src/prisma/client';
 export class UpdateSubCatValidator implements PipeTransform {
   async transform(value: any, metadata: ArgumentMetadata) {
     if (metadata.type !== 'custom') return value;
+    const { body } = value;
     let {
-      body,
       params: { id },
     } = value;
     id = parseInt(id);

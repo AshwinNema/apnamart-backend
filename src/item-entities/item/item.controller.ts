@@ -8,8 +8,6 @@ import {
   Post,
   Put,
   Query,
-  UploadedFile,
-  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
@@ -21,8 +19,13 @@ import {
   QueryItems,
   SearchByName,
   UpdateItem,
+  ItemFileUpload,
 } from 'src/validations';
-import { DeleteItemValidatorPipe, getQueryItemArgs, UpdateItemValidator } from './utils';
+import {
+  DeleteItemValidatorPipe,
+  getQueryItemArgs,
+  UpdateItemValidator,
+} from './utils';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { RequestProcessor } from 'src/decorators';
@@ -32,7 +35,6 @@ import {
   ValidateAndTransformCreateDataPipe,
   UpdateItemPayloadTransformPipe,
 } from './utils';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller()
 export class ItemController {
@@ -64,12 +66,12 @@ export class ItemController {
 
   @Put('image/:id')
   @Roles(UserRole.admin)
-  @UseInterceptors(FileInterceptor('file'))
+  @FormDataRequest()
   updateItemFilter(
-    @UploadedFile() file: Express.Multer.File,
+    @Body() body: ItemFileUpload,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.itemService.updateItemImg(id, file);
+    return this.itemService.updateItemImg(id, body.file);
   }
 
   @Get('search-by-name')
@@ -85,7 +87,7 @@ export class ItemController {
     @Param('id', ParseIntPipe) id: number,
     @Body() _: UpdateItem,
     @RequestProcessor() { body },
-  ) { 
+  ) {
     return this.itemService.updateItemById(id, body);
   }
   @Delete(':id')

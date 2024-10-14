@@ -9,15 +9,8 @@ import { ItemFilterController } from './item-filter/item-filter.controller';
 
 @Module({
   imports: [UploaderModule, NestjsFormDataModule],
-  controllers: [
-    ItemController,
-    ItemFilterController,
-  ],
-  providers: [
-    ItemService,
-    ItemFilterService,
-    CommonService,
-  ],
+  controllers: [ItemController, ItemFilterController],
+  providers: [ItemService, ItemFilterService, CommonService],
   exports: [ItemService],
 })
 export class ItemModule {}

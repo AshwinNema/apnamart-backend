@@ -64,7 +64,7 @@ export class ItemService {
 
     if (deletedItem) {
       const filterIds = deletedItem.filters.map(({ id }) => id);
-      await this.itemFilterService.deleteManyFilters(filterIds)
+      await this.itemFilterService.deleteManyFilters(filterIds);
     }
 
     return;

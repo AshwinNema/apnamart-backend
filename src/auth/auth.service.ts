@@ -4,17 +4,14 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  LoginValidator,
-  RegisterAdminValidator,
-  registerUser,
-} from 'src/validations';
+import { LoginValidator, RegisterAdminValidator } from 'src/validations';
 import { TokenService } from 'src/auth/token/token.service';
 import { AdminService } from 'src/user-entites/admin/admin.service';
 import { UserService } from 'src/user-entites/user/user.service';
 
 import { UserRole } from '@prisma/client';
 import prisma from 'src/prisma/client';
+import { getLoginOptions } from './utils';
 
 @Injectable()
 export class AuthService {
@@ -40,14 +37,12 @@ export class AuthService {
   async login(loginCredentails: LoginValidator) {
     const user = await this.userService.findUnique(
       { email: loginCredentails.email },
-      {
-        omit: { password: false },
-      },
+      getLoginOptions(loginCredentails.role),
     );
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const { id: userId, password } = user;
+    const { id: userId, password, userRoles } = user;
     if (!password) {
       throw new BadRequestException(
         'You have not setted your password yet. Please login through twitter/google and set your password first',
@@ -64,49 +59,16 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect password');
     }
 
+    if (!userRoles.includes(loginCredentails.role)) {
+      throw new BadRequestException(
+        'User does not have sufficient role permissions',
+      );
+    }
+
     const tokens = await this.tokenService.generateAuthTokens(userId);
 
     return {
       user: { ...user, role: loginCredentails.role },
-      tokens,
-    };
-  }
-
-  async register(userDetails: registerUser) {
-    const user = await this.userService.findUnique({
-      email: userDetails.email,
-    });
-
-    const userRoles = [userDetails.role];
-    delete userDetails.role;
-    let registeredUser;
-    if (user) {
-      if (user.userRoles.includes(userRoles[0])) {
-        throw new BadRequestException('User already has the given role');
-      } else {
-        registeredUser = await this.userService.updateUser(
-          {
-            email: userDetails.email,
-          },
-          {
-            ...userDetails,
-            userRoles: {
-              push: userRoles,
-            },
-          },
-        );
-      }
-    } else {
-      registeredUser = await this.userService.createUser({
-        ...userDetails,
-        userRoles,
-      });
-    }
-    const registeredUserId: number = registeredUser.id;
-    const tokens = await this.tokenService.generateAuthTokens(registeredUserId);
-
-    return {
-      user: { ...registeredUser, role: registeredUser.userRoles[0] },
       tokens,
     };
   }

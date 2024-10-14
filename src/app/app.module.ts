@@ -17,11 +17,13 @@ import { RequestStartTimeTracker } from 'src/middlewares/logger-startTime-tracke
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import prisma from 'src/prisma/client';
 import { OrdersEntitiesModule } from 'src/orders-entities/orders-entities.module';
+import { CommunicationModule } from 'src/communication/communication.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate: validateConfig }),
     ScheduleModule.forRoot(),
+    CommunicationModule,
     AuthModule,
     CronModule,
     ItemEntitiesModule,

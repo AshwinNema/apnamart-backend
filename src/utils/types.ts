@@ -9,3 +9,7 @@ export declare type ClassConstructor<T> = {
 export type MultiPartData = {
   data: string;
 };
+
+export interface ChatWebSocket extends WebSocket {
+  id?: string;
+}

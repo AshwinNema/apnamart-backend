@@ -2,17 +2,16 @@ import { Injectable } from '@nestjs/common';
 import prisma from 'src/prisma/client';
 import { getPaginationOptions } from 'src/utils';
 
+export interface paginationOptions {
+  limit?: number;
+  page?: number;
+}
+
 @Injectable()
 export class CommonService {
   async queryData(
     modelName: string,
-    {
-      limit,
-      page,
-    }: {
-      limit: number;
-      page: number;
-    },
+    { limit, page }: paginationOptions,
     queryOptions?: {
       [key: string]: any;
       where?: object;

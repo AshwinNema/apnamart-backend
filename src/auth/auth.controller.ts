@@ -17,7 +17,7 @@ import {
   GoogleAuth,
   TwitterAccessToken,
   LogoutValidator,
-} from 'src/validations/auth.validation';
+} from 'src/validations';
 import { TokenService2 } from 'src/auth/token/token2.service';
 import { GoogleAuthService } from './google-auth/google-auth.service';
 import { TwitterAuthService } from './twitter-auth/twitter-auth.service';
@@ -53,7 +53,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() userDetails: registerUser) {
-    return this.authService.register(userDetails);
+    return this.auth2Service.register(userDetails);
   }
 
   @Post('refresh-token')

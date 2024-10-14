@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TokenTypes } from '@prisma/client';
 import { getTokenExpiration } from 'src/utils';
@@ -81,31 +81,5 @@ export class TokenService {
         expires: new Date(refreshExpDate).toISOString(),
       },
     };
-  }
-
-  async verifyToken(
-    token: string,
-    type: TokenTypes,
-    secret: string,
-    exception?: HttpException,
-  ) {
-    const tokenPayload = jwt.verify(token, secret);
-    const userToken = await prisma.token.findFirst({
-      where: {
-        token: token,
-        type,
-        userId: Number(tokenPayload.sub),
-        blackListed: false,
-      },
-    });
-
-    if (exception && !userToken) {
-      throw exception;
-    }
-
-    if (!userToken) {
-      throw new NotFoundException('Token not found');
-    }
-    return userToken;
   }
 }

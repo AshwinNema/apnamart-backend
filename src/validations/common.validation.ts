@@ -7,6 +7,11 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
+  Max,
+  IsNumber,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
 } from 'class-validator';
 import { ClassConstructor } from '../utils/types';
 import { ValidatedObject } from '../interfaces';
@@ -34,6 +39,11 @@ export const validateObject = async <T extends object>(
   }
 };
 
+export interface paginationOptionsInterface {
+  limit: number;
+  page: number;
+}
+
 export class paginationOptions {
   @Min(1)
   @IsInt()
@@ -50,4 +60,37 @@ export class SearchByName {
   @IsNotEmpty()
   @IsString()
   name: string;
+}
+
+export class LatLng {
+  @Min(-90)
+  @Max(90)
+  @IsNumber()
+  @Type(() => Number)
+  latitude: number;
+
+  @Min(-180)
+  @Max(180)
+  @IsNumber()
+  @Type(() => Number)
+  longtitude: number;
+}
+
+@ValidatorConstraint()
+export class CustomDigitLengthValidator
+  implements ValidatorConstraintInterface
+{
+  length: number;
+  validate(
+    value: any,
+    validationArguments?: ValidationArguments,
+  ): Promise<boolean> | boolean {
+    const length = validationArguments.constraints[0];
+
+    const regExp = new RegExp(`^\\d{${length}}$`);
+    return regExp.test(value);
+  }
+  defaultMessage(validationArguments?: ValidationArguments): string {
+    return `Length should be exactly ${validationArguments.constraints[0]} `;
+  }
 }

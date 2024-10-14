@@ -18,11 +18,7 @@ export class CategoryValidator {
   name: string;
 }
 
-export class CreateCatValidation {
-  @IsString()
-  @IsNotEmpty()
-  data: string;
-
+export class CategoryFileUpload {
   @IsFile()
   @MaxFileSize(4e6, {
     message: 'Maximum size of the file should be 4 mega byte',
@@ -31,4 +27,10 @@ export class CreateCatValidation {
     message: 'File must be an image',
   })
   file: Express.Multer.File;
+}
+
+export class CreateCatValidation extends CategoryFileUpload {
+  @IsString()
+  @IsNotEmpty()
+  data: string;
 }

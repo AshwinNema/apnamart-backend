@@ -33,12 +33,15 @@ export class TokenService2 {
 
     if (!user) {
       isNewUser = true;
-      noInitialPassword = true;
       user = (await this.userService.createUser({
         name,
         email,
         userRoles: [role],
       })) as UserInterface;
+    }
+
+    if (!user?.password) {
+      noInitialPassword = true;
     }
 
     if (!user.userRoles.includes(role)) {
@@ -54,7 +57,7 @@ export class TokenService2 {
     }
 
     const tokens = await this.tokenService.generateAuthTokens(user.id);
-
+    delete user.password;
     return {
       user: { ...user, role },
       tokens,

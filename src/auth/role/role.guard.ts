@@ -7,6 +7,13 @@ import { SetMetadata } from '@nestjs/common';
 export const rolesKey = 'Role';
 export const Roles = (...roles: UserRole[]) => SetMetadata(rolesKey, roles);
 
+export const matchUserRoles = (
+  requiredRoles: UserRole[],
+  userRoles: UserRole[],
+) => {
+  return requiredRoles.some((role) => userRoles?.includes(role));
+};
+
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -23,6 +30,6 @@ export class RolesGuard implements CanActivate {
     }
 
     const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.userRoles?.includes(role));
+    return matchUserRoles(requiredRoles, user.userRoles);
   }
 }
