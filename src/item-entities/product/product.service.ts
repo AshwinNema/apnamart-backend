@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import prisma from 'src/prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private cloudinaryService: CloudinaryService) {}
+  cloudinaryService: CloudinaryService;
+  constructor() {
+    this.cloudinaryService = new CloudinaryService();
+  }
   async createProduct(productData) {
     const { file, files, data } = productData;
 
@@ -53,5 +57,9 @@ export class ProductService {
   async deletePhoto(data) {
     await this.cloudinaryService.deleteFile(data.cloudinary_public_id);
     return prisma.productPhoto.delete({ where: { id: data.id } });
+  }
+
+  async updateManyProducts(updateQuery: Prisma.ProductUpdateManyArgs) {
+    return prisma.product.updateMany(updateQuery);
   }
 }
