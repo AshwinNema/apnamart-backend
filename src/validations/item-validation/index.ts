@@ -10,10 +10,10 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { paginationOptions } from '../common.validation';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes } from 'src/utils';
-import { CreateFilterValidation } from './sub-validations';
+import { CreateFilterValidation, validateMainFilter } from './sub-validations';
 export * from './item-update';
 
 export class QueryItems extends paginationOptions {
@@ -51,6 +51,7 @@ export class CreateItemValidator {
   @Type(() => Number)
   categoryId: number;
 
+  @Transform(validateMainFilter())
   @ArrayMinSize(1)
   @ArrayUnique((option) => option.name, {
     message: 'All filter names should be unique',
@@ -58,7 +59,6 @@ export class CreateItemValidator {
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => CreateFilterValidation)
-  @IsOptional()
   filters: CreateFilterValidation[];
 }
 

@@ -1,8 +1,15 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-export const validateNewFilters = (newFilters, nameToIdMap) => {
+export const validateNewFilters = (
+  newFilters,
+  nameToIdMap,
+  mainFilterDetails,
+) => {
   newFilters?.forEach?.((filter) => {
-    const { name } = filter;
+    const { name, isMainFilter } = filter;
+    if (isMainFilter) {
+      mainFilterDetails.updatedFilter = filter;
+    }
     const isDuplicateName = nameToIdMap[name];
     if (isDuplicateName) {
       throw new NotFoundException(
@@ -12,10 +19,27 @@ export const validateNewFilters = (newFilters, nameToIdMap) => {
   });
 };
 
-export const validateUpdateFilters = (updateFilters, filterMap) => {
+export const validateUpdateFilters = (
+  updateFilters,
+  filterMap,
+  mainFilterDetails,
+) => {
   const { idMap, nameToIdMap, productOptionsMap } = filterMap;
   updateFilters?.forEach((filter) => {
-    const { id, name, createOptions, updateOptions, deleteOptions } = filter;
+    const {
+      id,
+      name,
+      createOptions,
+      updateOptions,
+      deleteOptions,
+      isMainFilter,
+    } = filter;
+    if (isMainFilter) {
+      mainFilterDetails.updatedFilter = filter;
+    }
+    if (mainFilterDetails?.prevMainFilter?.id === id) {
+      mainFilterDetails.curPrevFilter = filter;
+    }
     const optionDetails = idMap[id];
     if (!optionDetails) {
       throw new NotFoundException(
@@ -69,9 +93,16 @@ export const validateUpdateFilters = (updateFilters, filterMap) => {
   });
 };
 
-export const validateDeleteFilters = (deleteFilters, idMap) => {
+export const validateDeleteFilters = (
+  deleteFilters,
+  idMap,
+  mainFilterDetails,
+) => {
   deleteFilters?.forEach((filterId) => {
     const filterDetails = idMap[filterId];
+    if (filterId === mainFilterDetails?.prevMainFilter?.id) {
+      mainFilterDetails.isPrevMainFilterDeleted = true;
+    }
     if (!filterDetails) {
       throw new NotFoundException('Filter not found');
     }

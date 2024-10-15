@@ -28,8 +28,10 @@ export const getQueryItemArgs = (
       where,
       include: {
         category: {
-          name: true,
-          id: true,
+          select: {
+            name: true,
+            id: true,
+          },
         },
       },
     },

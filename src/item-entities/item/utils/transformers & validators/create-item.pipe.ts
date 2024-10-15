@@ -1,6 +1,5 @@
 import {
   ArgumentMetadata,
-  BadRequestException,
   Injectable,
   NotFoundException,
   PipeTransform,

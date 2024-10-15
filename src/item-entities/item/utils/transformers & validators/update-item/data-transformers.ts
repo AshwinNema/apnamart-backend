@@ -29,12 +29,15 @@ export const getPrismaQuery = (id: number) => {
   };
 };
 
-export const getFilterMap = (data) => {
-  const { idMap, nameToIdMap } = data.filters.reduce(
+export const getFilterMapsAndMainFilter = (data) => {
+  const { idMap, nameToIdMap, mainFilter } = data.filters.reduce(
     (map, filter) => {
       const { idMap, nameToIdMap } = map;
-      const { id, name } = filter;
+      const { id, name, isMainFilter } = filter;
       nameToIdMap[name] = id;
+      if (isMainFilter) {
+        map.mainFilter = filter;
+      }
       idMap[id] = filter.options.reduce(
         (map, option) => {
           const { optionIdMap, optionNameToIdMap } = map;
@@ -47,7 +50,7 @@ export const getFilterMap = (data) => {
       );
       return map;
     },
-    { idMap: {}, nameToIdMap: {} },
+    { idMap: {}, nameToIdMap: {}, mainFilter: null },
   );
 
   const productOptionsMap = data.product.reduce((obj, item) => {
@@ -57,5 +60,5 @@ export const getFilterMap = (data) => {
 
     return obj;
   }, {});
-  return { idMap, nameToIdMap, productOptionsMap };
+  return { idMap, nameToIdMap, productOptionsMap, mainFilter };
 };

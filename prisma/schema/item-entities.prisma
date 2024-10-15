@@ -28,16 +28,17 @@ model Item {
 }
 
 model ItemFilter {
-  id        Int                @id @default(autoincrement())
-  name      String
-  options   ItemFilterOption[]
-  user      User               @relation(fields: [createdBy], references: [id])
-  item      Item               @relation(fields: [itemId], references: [id])
-  itemId    Int
-  createdBy Int
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  archive   Boolean            @default(false)
+  id           Int                @id @default(autoincrement())
+  name         String
+  options      ItemFilterOption[]
+  isMainFilter Boolean            @default(false)
+  user         User               @relation(fields: [createdBy], references: [id])
+  item         Item               @relation(fields: [itemId], references: [id])
+  itemId       Int
+  createdBy    Int
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  archive      Boolean            @default(false)
 }
 
 model ItemFilterOption {
