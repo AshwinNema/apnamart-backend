@@ -2,6 +2,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
+  IsBoolean,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -30,6 +31,9 @@ export class updateFilter {
   @IsNotEmpty()
   @IsOptional()
   name: string;
+
+  @IsBoolean()
+  isMainFilter: boolean
 
   @IsOptional()
   @ArrayUnique((option) => option.name, {

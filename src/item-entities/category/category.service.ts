@@ -8,14 +8,13 @@ import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
 import { CloudinaryResponse } from '../../utils/types';
 import { Prisma } from '@prisma/client';
 import prisma from 'src/prisma/client';
-
-import { SubcategoryService } from '../subcategory/subcategory.service';
+import { ItemService } from '../item/item.service';
 
 @Injectable()
 export class CategoryService {
   constructor(
     private cloudinaryService: CloudinaryService,
-    private subCategoryService: SubcategoryService,
+    private itemService: ItemService,
   ) {}
 
   async getUnqiueCategory(filter: Prisma.CategoryWhereUniqueInput) {
@@ -74,9 +73,13 @@ export class CategoryService {
       throw new NotFoundException('Category not found');
     }
 
-    if (await this.subCategoryService.getOneSubCategory({ categoryId: id })) {
+    if (
+      await this.itemService.getOneItem({
+        categoryId: id,
+      })
+    ) {
       throw new BadRequestException(
-        'Category cannot be deleted because it is attached with subcategory',
+        'Category cannot be deleted because it is attached with an item',
       );
     }
     await prisma.category.update({ where: { id }, data: { archive: true } });
