@@ -5,12 +5,9 @@ import { UploaderModule } from 'src/uploader/uploader.module';
 import { CategoryService } from './category/category.service';
 import { ProductController } from './product/product.controller';
 import { ProductService } from './product/product.service';
-import { SubcategoryService } from './subcategory/subcategory.service';
 import { CommonService } from 'src/common/common.service';
-import { SubcategoryController } from './subcategory/subcategory.controller';
 import { ItemModule } from './item/item.module';
 import { RouterModule } from '@nestjs/core';
-import { Subcategory2Controller } from './subcategory/subcategory2.controller';
 
 @Module({
   imports: [
@@ -24,17 +21,7 @@ import { Subcategory2Controller } from './subcategory/subcategory2.controller';
       },
     ]),
   ],
-  providers: [
-    CategoryService,
-    ProductService,
-    SubcategoryService,
-    CommonService,
-  ],
-  controllers: [
-    CategoryController,
-    ProductController,
-    SubcategoryController,
-    Subcategory2Controller,
-  ],
+  providers: [CategoryService, ProductService, CommonService],
+  controllers: [CategoryController, ProductController],
 })
 export class ItemEntitiesModule {}

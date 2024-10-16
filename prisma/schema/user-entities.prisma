@@ -46,7 +46,6 @@ model User {
   merchantDetails      MerchantDetails?
   token                Token[]
   category             Category[]
-  subCategory          SubCategory[]
   itemfilter           ItemFilter[]
   product              Product[]
   itemFilterOption     ItemFilterOption[]

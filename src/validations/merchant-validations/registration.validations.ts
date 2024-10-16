@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -84,4 +85,9 @@ export class QueryMerchantRegistrations extends paginationOptions {
   @IsOptional()
   @IsEnum(MerchantRegistrationStatus)
   registrationStatus: MerchantRegistrationStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isMerchantBlocked: boolean;
 }
