@@ -16,7 +16,7 @@ export class MerchantRegistration2Service {
   productService: ProductService;
   constructor() {
     this.commonService = new CommonService();
-    this.productService = new ProductService()
+    this.productService = new ProductService();
   }
 
   async getOneMerchantRegistration(args: Prisma.MerchantDetailsFindFirstArgs) {

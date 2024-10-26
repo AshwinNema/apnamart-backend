@@ -7,7 +7,7 @@ model MerchantDetails {
   latitude             Decimal
   longtitude           Decimal
   addressLine1         String
-  addressLine2        String
+  addressLine2         String
   pinCode              Int
   bankAcNo             String
   gstIn                String
@@ -21,26 +21,13 @@ model MerchantDetails {
   archive              Boolean                    @default(false)
 }
 
-model ProductPhoto {
-  id                   Int      @id @default(autoincrement())
-  url                  String
-  cloudinary_public_id String
-  photos               Product? @relation("Photos", fields: [photoId], references: [id])
-  photoId              Int?
-  thumbnail            Product? @relation("Thumbnail", fields: [thumbnailId], references: [id])
-  thumbnailId          Int?     @unique
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  archive              Boolean  @default(false)
-}
-
 model Product {
   id             Int                @id @default(autoincrement())
   name           String
   price          Float
-  photos         ProductPhoto[]     @relation("Photos")
-  thumbNail      ProductPhoto?      @relation("Thumbnail")
-  description    String
+  photos         Json
+  description    Json
+  specification  Json
   rating         Float              @default(0)
   totalReviewers Int                @default(0)
   totalRatings   Int                @default(0)

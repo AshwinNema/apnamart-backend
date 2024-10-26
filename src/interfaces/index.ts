@@ -37,6 +37,6 @@ export interface CreateFilter {
 
 export interface CreateItemData {
   name: string;
-  categoryId: number; 
+  categoryId: number;
   filters: CreateFilter[];
 }

@@ -12,12 +12,7 @@ import { UserRole } from '@prisma/client';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Roles } from 'src/auth/role/role.guard';
 import { RequestProcessor } from 'src/decorators';
-import { MultiPartDataPipe } from 'src/pipes';
-import {
-  CreateProductValidation,
-  Product,
-  UpdateProduct,
-} from 'src/validations';
+import { CreateProductValidation, UpdateProduct } from 'src/validations';
 import { ProductService } from './product.service';
 import {
   ProductCreateTransformer,
@@ -33,13 +28,12 @@ export class ProductController {
   @Post()
   @Roles(UserRole.merchant)
   @UsePipes(new ProductCreateTransformer())
-  @UsePipes(new MultiPartDataPipe(Product))
   @FormDataRequest()
   createProduct(
-    @Body() _: CreateProductValidation,
+    @Body() body: CreateProductValidation,
     @RequestProcessor() processedBody,
   ) {
-    return this.productService.createProduct(processedBody);
+    return this.productService.createProduct(body, processedBody);
   }
 
   @Put('resource/:id')

@@ -15,24 +15,24 @@ export class DeletePhotoPipe implements PipeTransform {
     }
     const { user, params } = value;
 
-    const data = await prisma.productPhoto.findUnique({
-      where: { id: parseInt(params.id) },
-      include: {
-        photos: true,
-      },
-    });
+    // const data = await prisma.productPhoto.findUnique({
+    //   where: { id: parseInt(params.id) },
+    //   include: {
+    //     photos: true,
+    //   },
+    // });
 
-    if (!data) {
-      throw new NotFoundException('Resource not found');
-    }
+    // if (!data) {
+    //   throw new NotFoundException('Resource not found');
+    // }
 
-    const merchantId = data?.photos?.merchant || null;
+    // const merchantId = data?.photos?.merchant || null;
 
-    if (user.id != merchantId) {
-      throw new BadRequestException(
-        'Invalid Request. Merchant does not has access to the resource.',
-      );
-    }
-    return data;
+    // if (user.id != merchantId) {
+    //   throw new BadRequestException(
+    //     'Invalid Request. Merchant does not has access to the resource.',
+    //   );
+    // }
+    // return data;
   }
 }

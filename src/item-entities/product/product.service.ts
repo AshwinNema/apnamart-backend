@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import prisma from 'src/prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
+import { CreateProductValidation } from 'src/validations';
 
 @Injectable()
 export class ProductService {
@@ -9,35 +10,50 @@ export class ProductService {
   constructor() {
     this.cloudinaryService = new CloudinaryService();
   }
-  async createProduct(productData) {
-    const { file, files, data } = productData;
+  async createProduct(
+    body: CreateProductValidation,
+    processedBody: createProductProcessedBody,
+  ) {
+    const uploadedFiles = await Promise.all(
+      await this.cloudinaryService.uploadFiles(body.productImages),
+    );
+    let additionalDescriptionDetails: {
+      photos?: {
+        url: string;
+        cloudinary_public_id: string;
+        name: string;
+      }[];
+    } = {};
 
-    if (file) {
-      const uploadedFile = await this.cloudinaryService.uploadFile(file);
-
-      data.thumbNail = {
-        create: {
-          url: uploadedFile.secure_url,
-          cloudinary_public_id: uploadedFile.public_id,
-        },
-      };
+    if (body.descriptionFiles) {
+      const descriptionFiles = await Promise.all(
+        await this.cloudinaryService.uploadFiles(body.descriptionFiles),
+      );
+      additionalDescriptionDetails.photos = descriptionFiles.map((photo) => {
+        return {
+          url: photo.secure_url,
+          cloudinary_public_id: photo.public_id,
+          name: photo.original_filename,
+        };
+      });
     }
 
-    if (files?.length) {
-      const uploadedFiles = await Promise.all(
-        await this.cloudinaryService.uploadFiles(files),
-      );
-
-      data.photos = {
-        create: uploadedFiles.map((uploadedFile) => {
+    return prisma.product.create({
+      data: {
+        ...processedBody,
+        photos: uploadedFiles.map((photo) => {
           return {
-            url: uploadedFile.secure_url,
-            cloudinary_public_id: uploadedFile.public_id,
+            url: photo.secure_url,
+            cloudinary_public_id: photo.public_id,
+            name: photo.original_filename,
           };
         }),
-      };
-    }
-    return prisma.product.create({ data });
+        description: {
+          ...processedBody.description,
+          ...additionalDescriptionDetails,
+        },
+      },
+    });
   }
 
   updateProductById(where, update) {
@@ -56,7 +72,7 @@ export class ProductService {
 
   async deletePhoto(data) {
     await this.cloudinaryService.deleteFile(data.cloudinary_public_id);
-    return prisma.productPhoto.delete({ where: { id: data.id } });
+    // return prisma.productPhoto.delete({ where: { id: data.id } });
   }
 
   async updateManyProducts(updateQuery: Prisma.ProductUpdateManyArgs) {

@@ -23,9 +23,7 @@ export class MerchantController {
   @UsePipes(new ValidateMerchantToBlock())
   @Roles(UserRole.admin)
   @Put('block-unblock')
-  blockUnbloickMerchant(
-    @RequestProcessor() req,
-  ) {
+  blockUnbloickMerchant(@RequestProcessor() req) {
     return this.merchantRegistrationService.banremoveBanMerchat(req.body);
   }
 }

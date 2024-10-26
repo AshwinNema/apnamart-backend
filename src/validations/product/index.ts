@@ -2,44 +2,22 @@ import {
   ArrayUnique,
   IsArray,
   IsBoolean,
-  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsPositive,
   IsString,
-  Min,
 } from 'class-validator';
 import { HasMimeType, IsFile, IsFiles, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes } from 'src/utils';
+import { z } from 'zod';
 
-export class Product {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsInt()
-  @Min(0)
-  quantity: string;
-
-  @IsString()
-  description: string;
-
-  @IsInt()
-  itemId: number;
-
-  @IsPositive()
-  price: number;
-
-  @IsOptional()
-  @IsNumber({}, { each: true })
-  @IsArray()
-  @ArrayUnique((optionId) => optionId)
-  filterOptions: number[];
-
-  @IsBoolean()
-  available: boolean;
-}
+export const basicProductDetailsValidation = z.object({
+  name: z.string().min(1),
+  itemId: z.number().int().positive(),
+  price: z.number().positive(),
+  filterOptions: z.array(z.number().positive().int()),
+});
 
 export class UpdateProduct {
   @IsOptional()
@@ -67,25 +45,28 @@ export class CreateProductValidation {
   @IsNotEmpty()
   data: string;
 
-  @IsFile()
-  @MaxFileSize(2e6, {
-    message: 'Maximum size of the file should be 2 mega byte',
+  @IsFiles()
+  @MaxFileSize(4e6, {
+    each: true,
+    message: 'Maximum size of the description should be 4 mega byte',
   })
-  @HasMimeType(mimeTypes.imageOrVideo, {
-    message: 'File must be an image or video',
+  @HasMimeType(mimeTypes.image, {
+    each: true,
+    message: 'All the product image files must be of image format',
   })
-  file: Express.Multer.File;
+  productImages: Express.Multer.File[];
 
   @IsFiles()
-  @MaxFileSize(2e6, {
+  @MaxFileSize(4e6, {
     each: true,
-    message: 'Maximum size of the files should be 2 mega byte',
+    message: 'Maximum size of the description should be 4 mega byte',
   })
-  @HasMimeType(mimeTypes.imageOrVideo, {
+  @HasMimeType(mimeTypes.image, {
     each: true,
-    message: 'Files must be an image or video',
+    message: 'All the description files must be of image format',
   })
-  files: Express.Multer.File[];
+  @IsOptional()
+  descriptionFiles: Express.Multer.File[];
 }
 
 export class UpdateProductResource {

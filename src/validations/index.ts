@@ -3,11 +3,11 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-
+import { z } from 'zod';
 export * from './auth';
 export * from './category.validation';
 export * from './common.validation';
-export * from './product.validation';
+export * from './product';
 export * from './user.validation';
 export * from './delivery-location.validation';
 export * from './item-validation';
@@ -32,3 +32,12 @@ export function IsNull(validationOptions?: ValidationOptions) {
     });
   };
 }
+
+export const requiredStringValidation = (keyName: string) => {
+  return z
+    .string()
+    .transform((val) => val.trim())
+    .refine((val) => !!val.length, {
+      message: `${keyName} is required`,
+    });
+};

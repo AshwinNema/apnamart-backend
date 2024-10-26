@@ -32,8 +32,9 @@ export class updateFilter {
   @IsOptional()
   name: string;
 
+  @IsOptional()
   @IsBoolean()
-  isMainFilter: boolean
+  isMainFilter: boolean;
 
   @IsOptional()
   @ArrayUnique((option) => option.name, {
