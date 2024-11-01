@@ -4,6 +4,7 @@ import prisma from 'src/prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
 import { CloudinaryResponse } from 'src/utils/types';
 import { ItemFilterService } from './item-filter/item-filter.service';
+import { getItemListValidation } from 'src/validations';
 
 @Injectable()
 export class ItemService {
@@ -12,7 +13,7 @@ export class ItemService {
     private itemFilterService: ItemFilterService,
   ) {}
 
-  async getOneItem(where:Prisma.ItemWhereInput, otherOptions?: object) {
+  async getOneItem(where: Prisma.ItemWhereInput, otherOptions?: object) {
     return prisma.item.findFirst({ where, ...otherOptions });
   }
 
@@ -72,5 +73,16 @@ export class ItemService {
 
   async searchByName(term: string) {
     return prisma.$queryRaw`SELECT "id", "name", "photo" FROM "public"."Item" WHERE ("archive"=false AND to_tsvector('english', "public"."Item"."name") @@ to_tsquery('english', ${term}));`;
+  }
+
+  async getItemsList(query: getItemListValidation) {
+    return prisma.item.findMany({
+      where: query,
+      select: {
+        id: true,
+        name: true,
+        photo: true,
+      },
+    });
   }
 }

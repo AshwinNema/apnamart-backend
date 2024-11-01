@@ -1,31 +1,12 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-export const validateNewFilters = (
-  newFilters,
-  nameToIdMap,
-  mainFilterDetails,
-) => {
-  newFilters?.forEach?.((filter) => {
-    const { name, isMainFilter } = filter;
-    if (isMainFilter) {
-      mainFilterDetails.updatedFilter = filter;
-    }
-    const isDuplicateName = nameToIdMap[name];
-    if (isDuplicateName) {
-      throw new NotFoundException(
-        `Filter with name ${name} is already present in the system`,
-      );
-    }
-  });
-};
-
 export const validateUpdateFilters = (
   updateFilters,
   filterMap,
   mainFilterDetails,
 ) => {
   const { idMap, nameToIdMap, productOptionsMap } = filterMap;
-  updateFilters?.forEach((filter) => {
+  updateFilters?.forEach((filter, index) => {
     const {
       id,
       name,
@@ -35,10 +16,11 @@ export const validateUpdateFilters = (
       isMainFilter,
     } = filter;
     if (isMainFilter) {
-      mainFilterDetails.updatedFilter = filter;
+      mainFilterDetails.updatedMainFilter = filter;
     }
     if (mainFilterDetails?.prevMainFilter?.id === id) {
       mainFilterDetails.curPrevFilter = filter;
+      mainFilterDetails.curPrevFilterIndex = index;
     }
     const optionDetails = idMap[id];
     if (!optionDetails) {
@@ -90,21 +72,5 @@ export const validateUpdateFilters = (
         );
       }
     });
-  });
-};
-
-export const validateDeleteFilters = (
-  deleteFilters,
-  idMap,
-  mainFilterDetails,
-) => {
-  deleteFilters?.forEach((filterId) => {
-    const filterDetails = idMap[filterId];
-    if (filterId === mainFilterDetails?.prevMainFilter?.id) {
-      mainFilterDetails.isPrevMainFilterDeleted = true;
-    }
-    if (!filterDetails) {
-      throw new NotFoundException('Filter not found');
-    }
   });
 };

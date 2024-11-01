@@ -87,7 +87,7 @@ export class CategoryController {
   }
 
   @Get('list')
-  @Roles(UserRole.admin)
+  @SkipAccessAuth()
   async catList() {
     return this.categoryService.getCatList();
   }

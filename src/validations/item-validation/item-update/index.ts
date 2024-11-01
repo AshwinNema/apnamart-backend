@@ -29,7 +29,7 @@ export class UpdateItem {
   categoryId: number;
 
   @ArrayUnique((option) => option.name, {
-    message: 'All filter names should be unique',
+    message: 'All new filter names should be unique',
   })
   @ValidateNested({ each: true })
   @IsArray()
@@ -56,10 +56,11 @@ export class UpdateItem {
     message: 'All filter ids should be unique',
   })
   @ArrayUnique((option) => option.name, {
-    message: 'All filter names should be unique',
+    message: 'All update filter names should be unique',
   })
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => updateFilter)
+  @IsOptional()
   updateFilters: updateFilter[];
 }

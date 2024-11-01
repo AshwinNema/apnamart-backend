@@ -1,8 +1,5 @@
 import { ChatWebSocket } from 'src/utils/types';
-import {
-  adminMerchantChat,
-  merchantAdminChatEvents,
-} from '../../utils/interfaces';
+import { adminMerchantChat } from '../../utils/interfaces';
 import { MerchantAdminChatService } from '../merchant-admin-chat.service';
 
 export const setupInitialConnection = (

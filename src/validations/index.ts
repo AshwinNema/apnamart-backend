@@ -3,26 +3,17 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-
-export * from './auth';
-export * from './category.validation';
-export * from './common.validation';
-export * from './product.validation';
-export * from './user.validation';
-export * from './delivery-location.validation';
-export * from './item-validation';
-export * from './merchant-validations';
-export * from './communication';
+import { z } from 'zod';
 
 export function IsNull(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isNull',
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(value: any) {
           return value === null; // Check if the value is null
         },
         defaultMessage(args: ValidationArguments) {
@@ -32,3 +23,22 @@ export function IsNull(validationOptions?: ValidationOptions) {
     });
   };
 }
+
+export const requiredStringValidation = (keyName: string) => {
+  return z
+    .string()
+    .transform((val) => val.trim())
+    .refine((val) => !!val.length, {
+      message: `${keyName} is required`,
+    });
+};
+
+export * from './auth';
+export * from './category.validation';
+export * from './common.validation';
+export * from './product';
+export * from './user.validation';
+export * from './delivery-location.validation';
+export * from './item-validation';
+export * from './merchant-validations';
+export * from './communication';

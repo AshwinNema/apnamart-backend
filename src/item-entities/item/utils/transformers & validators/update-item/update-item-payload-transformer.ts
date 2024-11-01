@@ -14,7 +14,7 @@ export class UpdateItemPayloadTransformPipe implements PipeTransform {
     const createdBy = user.id;
     const create =
       body?.newFilters?.map((item) => {
-        const { name, options } = item;
+        const { name, options, isMainFilter } = item;
         return {
           name,
           createdBy,
@@ -26,6 +26,7 @@ export class UpdateItemPayloadTransformPipe implements PipeTransform {
               })),
             },
           },
+          isMainFilter,
         };
       }) || [];
 
@@ -34,7 +35,7 @@ export class UpdateItemPayloadTransformPipe implements PipeTransform {
     body?.updateFilters?.forEach?.((filter) => {
       const { id, createOptions, deleteOptions, updateOptions } = filter;
 
-      const details = _.pick(filter, ['name']);
+      const details = _.pick(filter, ['name', 'isMainFilter']);
       const updateOptionList = [];
       updateOptions?.forEach((option) => {
         const { id, name } = option;

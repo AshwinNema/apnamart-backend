@@ -6,10 +6,11 @@ import { ItemFilterService } from './item-filter/item-filter.service';
 import { ItemController } from './item.controller';
 import { CommonService } from 'src/common/common.service';
 import { ItemFilterController } from './item-filter/item-filter.controller';
+import { Item2Controller } from './item2.controller';
 
 @Module({
   imports: [UploaderModule, NestjsFormDataModule],
-  controllers: [ItemController, ItemFilterController],
+  controllers: [ItemController, ItemFilterController, Item2Controller],
   providers: [ItemService, ItemFilterService, CommonService],
   exports: [ItemService],
 })

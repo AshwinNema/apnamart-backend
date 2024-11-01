@@ -1,15 +1,3 @@
-model Rating {
-  id              Int        @id @default(autoincrement())
-  rating          Float?
-  userFeedback    String?
-  order           Order      @relation(fields: [orderId], references: [id])
-  orderId         Int        @unique
-  orderItemRating OrderItem?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  archive         Boolean    @default(false)
-}
-
 model OrderItem {
   id        Int      @id @default(autoincrement())
   quantity  Float
@@ -18,8 +6,6 @@ model OrderItem {
   productId Int
   order     Order    @relation(fields: [orderId], references: [id])
   orderId   Int
-  rating    Rating?  @relation(fields: [ratingId], references: [id])
-  ratingId  Int?     @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   archive   Boolean  @default(false)
@@ -39,7 +25,6 @@ model Order {
   razorpayPaymentId  String?
   stripePaymentId    String?
   orderItems         OrderItem[]
-  rating             Rating?
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt
   archive            Boolean                  @default(false)

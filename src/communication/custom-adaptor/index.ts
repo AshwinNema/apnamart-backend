@@ -144,7 +144,7 @@ export class WsAdapter extends AbstractWsAdapter {
   async dispose(): Promise<void> {
     const closeEventSignals = Array.from(this.httpServersRegistry)
       .filter(([port]) => port !== UNDERLYING_HTTP_SERVER_PORT)
-      .map(([_, server]) => new Promise((resolve) => server.close(resolve)));
+      .map(([, server]) => new Promise((resolve) => server.close(resolve)));
     await Promise.all(closeEventSignals);
     this.httpServersRegistry.clear();
     this.wsServersRegistry.clear();
