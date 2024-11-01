@@ -1,33 +1,48 @@
 import {
   Body,
   Controller,
-  Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Roles } from 'src/auth/role/role.guard';
-import { RequestProcessor } from 'src/decorators';
-import { CreateProductValidation, UpdateProduct } from 'src/validations';
-import { ProductService } from './product.service';
+import { RequestProcessor, User } from 'src/decorators';
 import {
-  ProductCreateTransformer,
-  ProductUpdateTransformer,
-} from './transformers';
-import { UpdateResourcePipe } from './transformers/update-resource.transformer';
-import { DeletePhotoPipe } from './transformers/delete-photo.transformer';
+  CreateProductValidation,
+  QueryProducts,
+  UpdateProductValidation,
+} from 'src/validations';
+import { ProductService } from './product.service';
+import { CreateProductTransformer } from './utils/transformers';
+import { UserInterface } from 'src/interfaces';
+import { CommonService } from 'src/common/common.service';
+import { queryProductArgs } from './utils';
+import { UpdateProductTransformer } from './utils/transformers/update';
+import { ProductUpdateService } from './product-update/product-update.service';
+import { processedUpdateProduct } from './interfaces';
 
 @Controller('product')
 export class ProductController {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private productUpdateService: ProductUpdateService,
+    private commonService: CommonService,
+  ) {}
+
+  @Get()
+  queryProducts(@Query() query: QueryProducts, @User() user: UserInterface) {
+    return this.commonService.queryData(...queryProductArgs(query, user));
+  }
 
   @Post()
   @Roles(UserRole.merchant)
-  @UsePipes(new ProductCreateTransformer())
+  @UsePipes(new CreateProductTransformer())
   @FormDataRequest()
   createProduct(
     @Body() body: CreateProductValidation,
@@ -36,35 +51,21 @@ export class ProductController {
     return this.productService.createProduct(body, processedBody);
   }
 
-  @Put('resource/:id')
-  @Roles(UserRole.merchant)
-  @UsePipes(new UpdateResourcePipe())
-  @FormDataRequest()
-  updateResource(@RequestProcessor() requestBody) {
-    return this.productService.updateResouce(
-      requestBody.data,
-      requestBody.file,
-    );
-  }
-
   @Put(':id')
   @Roles(UserRole.merchant)
-  @UsePipes(new ProductUpdateTransformer())
+  @UsePipes(new UpdateProductTransformer())
+  @FormDataRequest()
   updateProduct(
     @Param('id', ParseIntPipe) id: number,
-    @Body() _: UpdateProduct,
-    @RequestProcessor() processedBody,
+    @Body() body: UpdateProductValidation,
+    @RequestProcessor() processedBody: processedUpdateProduct,
   ) {
-    return this.productService.updateProductById({ id }, processedBody);
+    return this.productUpdateService.updateProduct(id, body, processedBody);
   }
 
-  @Delete('photo-resource/:id')
-  @Roles(UserRole.merchant)
-  @UsePipes(new DeletePhotoPipe())
-  deleteResource(
-    @Param('id', ParseIntPipe) _,
-    @RequestProcessor() requestBody,
-  ) {
-    return this.productService.deletePhoto(requestBody);
+  @Get('selected-filters/:id')
+  @Roles(UserRole.merchant, UserRole.merchant)
+  async getProductFilters(@Param('id', ParseIntPipe) id: number) {
+    return this.productService.getProductFilters(id);
   }
 }

@@ -74,7 +74,7 @@ export class UpdateItemValidator implements PipeTransform {
     }
 
     const filterMapsAndMainFilter = getFilterMapsAndMainFilter(data);
-    let mainFilterDetails = {
+    const mainFilterDetails = {
       updatedMainFilter: null,
       prevMainFilter: filterMapsAndMainFilter.mainFilter,
       isPrevMainFilterDeleted: false,

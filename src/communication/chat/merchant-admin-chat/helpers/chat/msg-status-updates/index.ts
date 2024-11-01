@@ -11,7 +11,7 @@ export const markMsgsAsDeliveredAndGetUpdatedList = async (
   clientSocketMap,
   deliveryTime,
 ) => {
-  let { statusUpdateIdList, newResultList } = getQueryMsgUpdateList(
+  const { statusUpdateIdList, newResultList } = getQueryMsgUpdateList(
     results,
     clientDetails,
     deliveryTime,

@@ -9,16 +9,12 @@ import {
   CreateProductValidation,
 } from 'src/validations';
 import * as _ from 'lodash';
-import { z } from 'zod';
-import {
-  seriesDescriptionValidation,
-  seriesSpecification,
-} from 'src/validations/product/subvalidations';
 import { itemValidation } from './validations';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
+import { createProductProcessedBody } from 'src/item-entities/product/interfaces';
 
 @Injectable()
-export class ProductCreateTransformer implements PipeTransform {
+export class CreateProductTransformer implements PipeTransform {
   cloudinaryService: CloudinaryService;
   constructor() {
     this.cloudinaryService = new CloudinaryService();
@@ -37,39 +33,49 @@ export class ProductCreateTransformer implements PipeTransform {
       'itemId',
       'price',
       'filterOptions',
+      'specification',
+      'description',
     ]);
     const basicProductDetails = basicProductDetailsValidation.parse(details);
     await itemValidation(details.itemId, details.filterOptions);
 
-    const description = Array.isArray(parsedData.description)
-      ? seriesDescriptionValidation.parse(parsedData.description)
-      : z.string().min(1).parse(parsedData.description);
-
-    if (body?.descriptionFiles?.length > 4) {
+    const descriptionFileLength = !body?.descriptionFiles
+      ? 0
+      : body?.descriptionFiles?.length || 1;
+    if (descriptionFileLength > 4) {
       throw new BadRequestException(
         'There cannot be more than 4 images attached for description',
       );
     }
-
     if (
-      Array.isArray(
-        body?.descriptionFiles
-          ? body?.descriptionFiles?.length
-          : 1 != description?.length,
-      )
+      !Array.isArray(basicProductDetails.description) &&
+      body?.descriptionFiles
     ) {
       throw new BadRequestException(
-        'Description images must be equal to the total stages n the description',
+        'Description images can only be attached with stages description',
+      );
+    }
+    if (
+      body?.descriptionFiles &&
+      basicProductDetails?.description?.length != descriptionFileLength
+    ) {
+      throw new BadRequestException(
+        'Description images must be equal to the total stages in the description',
       );
     }
 
-    const specification = Array.isArray(parsedData.specification)
-      ? seriesSpecification.parse(parsedData.specification)
-      : z.string().min(1).parse(parsedData.specification);
-
-    if (!body.productImages) {
+    const productImgLength = !body.productImages
+      ? 0
+      : body?.productImages?.length || 1;
+    if (!productImgLength) {
       throw new BadRequestException(
         'Please attach atleast one image of the product',
+      );
+    }
+
+    if (productImgLength > 4) {
+      throw new BadRequestException(
+        'Only maximum of 4 product images are allowed',
       );
     }
 
@@ -81,9 +87,9 @@ export class ProductCreateTransformer implements PipeTransform {
       price: basicProductDetails.price,
       merchant: user.id,
       description: {
-        details: description,
+        details: basicProductDetails.description,
       },
-      specification,
+      specification: basicProductDetails.specification,
       filterOptions: {
         connect: basicProductDetails.filterOptions.map((optionId) => ({
           id: optionId,
