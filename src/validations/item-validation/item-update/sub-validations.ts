@@ -36,6 +36,10 @@ export class updateFilter {
   isMainFilter: boolean
 
   @IsOptional()
+  @IsBoolean()
+  isMainFilter: boolean;
+
+  @IsOptional()
   @ArrayUnique((option) => option.name, {
     message: 'All the option names for the filter must be unique',
   })

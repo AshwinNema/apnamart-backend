@@ -12,7 +12,7 @@ import { MerchantService } from './merchant.service';
 @Module({
   imports: [NestjsFormDataModule, UploaderModule, CommunicationModule],
   controllers: [MerchantRegistrationController, MerchantController],
-  providers: [ 
+  providers: [
     MerchantRegistrationService,
     MerchantRegistration2Service,
     CommonService,

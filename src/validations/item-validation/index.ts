@@ -67,3 +67,11 @@ export class createItemFilterValidation extends CreateFilterValidation {
   @IsInt()
   itemId: number;
 }
+
+export class getItemListValidation {
+  @Min(1)
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  categoryId: number;
+}

@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Put, Query, UsePipes } from '@nestjs/common';
+import { Controller, Get, Put, Query, UsePipes } from '@nestjs/common';
 import { MerchantService } from './merchant.service';
-import { blockUnblockMerchant, QueryMerchants } from 'src/validations';
+import { QueryMerchants } from 'src/validations';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { ValidateMerchantToBlock } from './utils';
@@ -23,9 +23,7 @@ export class MerchantController {
   @UsePipes(new ValidateMerchantToBlock())
   @Roles(UserRole.admin)
   @Put('block-unblock')
-  blockUnbloickMerchant(
-    @RequestProcessor() req,
-  ) {
+  blockUnbloickMerchant(@RequestProcessor() req) {
     return this.merchantRegistrationService.banremoveBanMerchat(req.body);
   }
 }

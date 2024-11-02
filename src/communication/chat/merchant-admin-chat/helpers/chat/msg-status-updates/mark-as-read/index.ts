@@ -24,7 +24,6 @@ export const markMsgAsRead = async (
   if (typeof id !== 'number') throwErr('Id must be a number');
 
   authenticateChat(clientDetails);
-  let updatedMsg, unreadMsgCount;
   const transactionDetails = await transactionQuery(
     id,
     clientDetails,
@@ -33,8 +32,8 @@ export const markMsgAsRead = async (
   );
   // Entity that is marking msg as read should receive the count of unread msgs
   // and the sender of the msg should receive the status that msg has been read
-  updatedMsg = transactionDetails.updatedMsg;
-  unreadMsgCount = transactionDetails.unreadMsgCount;
+  const updatedMsg = transactionDetails.updatedMsg;
+  const unreadMsgCount = transactionDetails.unreadMsgCount;
 
   const msgReceiver = clientDetails.isClientMerchant ? 'merchant' : 'admin';
   const msgSender = clientDetails.isClientMerchant ? 'admin' : 'merchant';

@@ -67,12 +67,11 @@ export const validateMainFilter =
         if (filter.isMainFilter) count += 1;
       });
     }
-    const errorMsg =
-      count === 0
-        ? 'There has to be one main filter'
-        : 'There cannot be more than one main filter';
-    if (count != 1) {
-      throw new BadRequestException(errorMsg);
+
+    if (count > 1) {
+      throw new BadRequestException(
+        'There cannot be more than one main filter',
+      );
     }
     return value;
   };

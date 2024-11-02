@@ -33,6 +33,9 @@ export class ItemFilterService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
   }
 }
