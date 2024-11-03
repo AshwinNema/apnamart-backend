@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import prisma from 'src/prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
@@ -37,22 +37,29 @@ export class ItemService {
     return this.cloudinaryService.updatePrismaEntityFile('item', id, file);
   }
 
-  async updateItemById(
-    id: number,
-    {
-      update,
-      deleteFilters,
-    }: {
-      update: Prisma.ItemUpdateArgs;
-      deleteFilters?: number[];
-    },
-  ) {
+  async updateItemById({
+    update,
+    deleteFilters,
+  }: {
+    update: Prisma.ItemUpdateArgs;
+    deleteFilters?: number[];
+  }) {
     if (deleteFilters?.length) {
       await this.itemFilterService.deleteManyFilters(deleteFilters);
     }
     return prisma.item.update(update);
   }
   async deleteItem(id: number) {
+    const productAttached = await prisma.product.findFirst({
+      where: {
+        itemId: id,
+      },
+    });
+
+    if (productAttached)
+      throw new BadRequestException(
+        'Item cannot be deleted because product is attached to it',
+      );
     const deletedItem = await prisma.item.update({
       where: { id },
       data: { archive: true },

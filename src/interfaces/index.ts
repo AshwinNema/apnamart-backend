@@ -40,3 +40,8 @@ export interface CreateItemData {
   categoryId: number;
   filters: CreateFilter[];
 }
+
+export interface SubCategoryInterface {
+  name: string;
+  categoryId: number;
+}

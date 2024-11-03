@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import prisma from 'src/prisma/client';
+import { CreateProductValidation } from 'src/validations';
 
 export const itemValidation = async (itemId: number, options: number[]) => {
   const itemData = await prisma.item.findUnique({
@@ -49,4 +50,48 @@ export const itemValidation = async (itemId: number, options: number[]) => {
     }
     duplicateOptionChecker[filterId] = true;
   });
+};
+
+export const descriptionFileValidation = (
+  body: CreateProductValidation,
+  basicProductDetails: {
+    description?:
+      | string
+      | {
+          id?: string;
+          header?: string;
+          details?:
+            | string
+            | {
+                id?: string;
+                key?: string;
+                val?: string;
+              }[];
+        }[];
+  },
+) => {
+  const descriptionFileLength = !body?.descriptionFiles
+    ? 0
+    : body?.descriptionFiles?.length || 1;
+  if (descriptionFileLength > 4) {
+    throw new BadRequestException(
+      'There cannot be more than 4 images attached for description',
+    );
+  }
+  if (
+    !Array.isArray(basicProductDetails.description) &&
+    body?.descriptionFiles
+  ) {
+    throw new BadRequestException(
+      'Description images can only be attached with stages description',
+    );
+  }
+  if (
+    body?.descriptionFiles &&
+    basicProductDetails?.description?.length != descriptionFileLength
+  ) {
+    throw new BadRequestException(
+      'Description images must be equal to the total stages in the description',
+    );
+  }
 };

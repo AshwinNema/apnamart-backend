@@ -49,6 +49,7 @@ export interface createProductProcessedBody {
       id: number;
     }[];
   };
+  isBlocked: boolean
 }
 
 export interface basicProductUpdateDetails {

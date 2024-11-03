@@ -33,6 +33,12 @@ export const getQueryItemArgs = (
             id: true,
           },
         },
+        subCategory: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
       },
     },
   ];

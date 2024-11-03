@@ -15,6 +15,7 @@ export const validateUpdateFilters = (
       deleteOptions,
       isMainFilter,
     } = filter;
+
     if (isMainFilter) {
       mainFilterDetails.updatedMainFilter = filter;
     }
@@ -72,5 +73,13 @@ export const validateUpdateFilters = (
         );
       }
     });
+
+    const newFilterOptionCount =
+      Object.keys(optionIdMap).length +
+      (createOptions?.length || 0) -
+      (deleteOptions?.length || 0);
+
+    if (newFilterOptionCount === 0)
+      throw new BadRequestException('There has to be one option in the filter');
   });
 };

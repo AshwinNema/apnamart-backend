@@ -1,5 +1,6 @@
 import {
   ArgumentMetadata,
+  BadRequestException,
   Injectable,
   NotFoundException,
   PipeTransform,
@@ -8,16 +9,30 @@ import prisma from 'src/prisma/client';
 import { CreateItemValidator } from 'src/validations';
 
 const validateCreateItem = async (data: CreateItemValidator) => {
-  const categoryData = await prisma.category.findUnique({
-    where: { id: data.categoryId },
+
+  const subCategoryData = await prisma.subCategory.findUnique({
+    where: { id: data.subCategoryId },
+    include:{
+      category:true
+    }
   });
-  if (!categoryData) {
-    throw new NotFoundException('Sub category not found');
+
+  if (!subCategoryData) {
+    throw new BadRequestException('Sub category not found');
+  }
+
+  if (subCategoryData.categoryId != data.categoryId) {
+    throw new BadRequestException('Sub category and category are not linked');
   }
 
   const duplicate = await prisma.item.findFirst({
-    where: { categoryId: data.categoryId, name: data.name },
+    where: {
+      categoryId: data.categoryId,
+      subCategoryId: data.subCategoryId,
+      name: data.name,
+    },
   });
+
   if (duplicate) {
     throw new NotFoundException(
       'Item with the same name is already present in the system',

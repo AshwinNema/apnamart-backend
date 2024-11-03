@@ -9,6 +9,9 @@ import { CommonService } from 'src/common/common.service';
 import { ItemModule } from './item/item.module';
 import { RouterModule } from '@nestjs/core';
 import { ProductUpdateService } from './product/product-update/product-update.service';
+import { SubcategoryController } from './subcategory/subcategory.controller';
+import { Subcategory2Controller } from './subcategory/subcategory2.controller';
+import { SubcategoryService } from './subcategory/subcategory.service';
 
 @Module({
   imports: [
@@ -25,9 +28,15 @@ import { ProductUpdateService } from './product/product-update/product-update.se
   providers: [
     CategoryService,
     ProductService,
+    SubcategoryService,
     CommonService,
     ProductUpdateService,
   ],
-  controllers: [CategoryController, ProductController],
+  controllers: [
+    CategoryController,
+    SubcategoryController,
+    Subcategory2Controller,
+    ProductController,
+  ],
 })
 export class ItemEntitiesModule {}

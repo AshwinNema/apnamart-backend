@@ -9,9 +9,11 @@ import {
   CreateProductValidation,
 } from 'src/validations';
 import * as _ from 'lodash';
-import { itemValidation } from './validations';
+import { descriptionFileValidation, itemValidation } from './validations';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
 import { createProductProcessedBody } from 'src/item-entities/product/interfaces';
+import prisma from 'src/prisma/client';
+import { MerchantRegistrationStatus } from '@prisma/client';
 
 @Injectable()
 export class CreateProductTransformer implements PipeTransform {
@@ -26,6 +28,18 @@ export class CreateProductTransformer implements PipeTransform {
     if (metadata.type !== 'custom') {
       return value;
     }
+    const registration = await prisma.merchantDetails.findUnique({
+      where: { userId: value.user.id },
+    });
+
+    if (
+      !registration ||
+      registration.registrationStatus != MerchantRegistrationStatus.completed
+    ) {
+      throw new BadRequestException(
+        'Product can only be created after merchant registration is completed',
+      );
+    }
     const body: CreateProductValidation = value.body;
     const parsedData = JSON.parse(body.data);
     const details = _.pick(parsedData, [
@@ -38,32 +52,7 @@ export class CreateProductTransformer implements PipeTransform {
     ]);
     const basicProductDetails = basicProductDetailsValidation.parse(details);
     await itemValidation(details.itemId, details.filterOptions);
-
-    const descriptionFileLength = !body?.descriptionFiles
-      ? 0
-      : body?.descriptionFiles?.length || 1;
-    if (descriptionFileLength > 4) {
-      throw new BadRequestException(
-        'There cannot be more than 4 images attached for description',
-      );
-    }
-    if (
-      !Array.isArray(basicProductDetails.description) &&
-      body?.descriptionFiles
-    ) {
-      throw new BadRequestException(
-        'Description images can only be attached with stages description',
-      );
-    }
-    if (
-      body?.descriptionFiles &&
-      basicProductDetails?.description?.length != descriptionFileLength
-    ) {
-      throw new BadRequestException(
-        'Description images must be equal to the total stages in the description',
-      );
-    }
-
+    descriptionFileValidation(body, basicProductDetails);
     const productImgLength = !body.productImages
       ? 0
       : body?.productImages?.length || 1;
@@ -95,6 +84,7 @@ export class CreateProductTransformer implements PipeTransform {
           id: optionId,
         })),
       },
+      isBlocked: registration.isMerchantBlocked,
     };
   }
 }

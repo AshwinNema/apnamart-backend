@@ -10,6 +10,7 @@ import {
   validateDeleteFilters,
   validateMainFilters,
   validateNewFilters,
+  validateUpdatedCatSubCat,
   validateUpdateFilters,
 } from './sub-validations & transformations';
 import {
@@ -44,35 +45,16 @@ export class UpdateItemValidator implements PipeTransform {
     if (!data) {
       throw new NotFoundException('Item not found');
     }
-    const updatedCategoryId = body.categoryId || data.categoryId;
-    if (
-      body.name &&
-      data.name !== body.name &&
-      (await prisma.item.findFirst({
-        where: {
-          id: { not: id },
-          name: body.name,
-          categoryId: updatedCategoryId,
-        },
-      }))
-    ) {
+    await validateUpdatedCatSubCat(body, id, data);
+    const newFilterCount =
+      data.filters.length +
+      (body?.newFilters?.length || 0) -
+      (body?.deleteFilters?.length || 0);
+
+    if (newFilterCount === 0)
       throw new BadRequestException(
-        'Item with the same name is already present in the system',
+        'There has to be atleast one filter in the item',
       );
-    }
-
-    if (
-      body.categoryId &&
-      data.categoryId != updatedCategoryId &&
-      !(await prisma.category.findFirst({
-        where: {
-          id: updatedCategoryId,
-        },
-      }))
-    ) {
-      throw new BadRequestException('Sub category not found');
-    }
-
     const filterMapsAndMainFilter = getFilterMapsAndMainFilter(data);
     const mainFilterDetails = {
       updatedMainFilter: null,
