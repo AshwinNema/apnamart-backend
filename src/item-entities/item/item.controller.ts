@@ -18,7 +18,6 @@ import {
   CreateItemValidator,
   QueryItems,
   SearchByName,
-  UpdateItem,
   ItemFileUpload,
 } from 'src/validations';
 import {
@@ -84,11 +83,9 @@ export class ItemController {
   @UsePipes(new UpdateItemValidator())
   @Roles(UserRole.admin)
   updateItemById(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() _: UpdateItem,
     @RequestProcessor() { body },
   ) {
-    return this.itemService.updateItemById(id, body);
+    return this.itemService.updateItemById(body);
   }
   @Delete(':id')
   @UsePipes(new DeleteItemValidatorPipe())

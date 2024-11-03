@@ -49,6 +49,7 @@ model User {
   itemfilter           ItemFilter[]
   product              Product[]
   itemFilterOption     ItemFilterOption[]
+  subCategory          SubCategory[]
   orderMerchant        Order[]            @relation("OrderMerchant")
   orderCustomer        Order[]            @relation("OrderCustomer")
   deliveryArea         DeliveryArea[]

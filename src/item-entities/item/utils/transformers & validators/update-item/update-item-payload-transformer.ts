@@ -2,16 +2,22 @@ import * as _ from 'lodash';
 import { ArgumentMetadata, PipeTransform } from '@nestjs/common';
 import { UserInterface } from 'src/interfaces';
 import { UpdateItem } from 'src/validations';
-
+import { z } from 'zod';
 export class UpdateItemPayloadTransformPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
     if (metadata.type !== 'custom') return value;
 
     const body: UpdateItem = value.body;
-    const mainDetails = _.pick(body, ['name', 'categoryId']);
-    const itemId = parseInt(value.params.id);
+    const mainDetails = _.pick(body, ['name', 'categoryId', 'subCategoryId']);
+    const itemId = z.coerce
+      .number({ message: 'Item id must be a number' })
+      .int({ message: 'Item id must be an integer' })
+      .min(1, {
+        message: 'Item must be greater than or equal to 1',
+      })
+      .parse(value.params.id);
     const user: UserInterface = value.user;
-    const createdBy = user.id;
+    const createdBy = z.coerce.number().min(1).parse(user.id);
     const create =
       body?.newFilters?.map((item) => {
         const { name, options, isMainFilter } = item;

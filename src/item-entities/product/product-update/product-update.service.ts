@@ -77,10 +77,8 @@ export class ProductUpdateService {
         originalStagesIdMap,
       );
     }
-    setTimeout(async () => {
-      deleteFileList.length &&
-        (await this.cloudinaryService.deleteFiles(deleteFileList));
-    }, 15000);
+    deleteFileList.length &&
+      (await this.cloudinaryService.deleteFiles(deleteFileList));
 
     return prisma.product.update({
       where: { id },

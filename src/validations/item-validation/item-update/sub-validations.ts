@@ -32,9 +32,6 @@ export class updateFilter {
   @IsOptional()
   name: string;
 
-  @IsBoolean()
-  isMainFilter: boolean
-
   @IsOptional()
   @IsBoolean()
   isMainFilter: boolean;

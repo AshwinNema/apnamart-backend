@@ -28,6 +28,11 @@ export class UpdateItem {
   @IsOptional()
   categoryId: number;
 
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  subCategoryId: number;
+
   @ArrayUnique((option) => option.name, {
     message: 'All new filter names should be unique',
   })

@@ -51,6 +51,11 @@ export class CreateItemValidator {
   @Type(() => Number)
   categoryId: number;
 
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  subCategoryId: number;
+
   @Transform(validateMainFilter())
   @ArrayMinSize(1)
   @ArrayUnique((option) => option.name, {

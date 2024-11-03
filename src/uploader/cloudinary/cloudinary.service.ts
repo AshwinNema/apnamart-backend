@@ -26,9 +26,7 @@ export class CloudinaryService {
   }
 
   async deleteFiles(publicIds: string[]) {
-    return cloudinary.api.delete_all_resources({
-      public_ids: publicIds,
-    });
+    return cloudinary.api.delete_resources(publicIds);
   }
 
   async deletePrismaEntityFile(
