@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserInterface } from 'src/interfaces';
 import prisma from 'src/prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
+import { GetUserProfile } from 'src/validations';
 
 @Injectable()
 export class UserService {
@@ -48,14 +49,23 @@ export class UserService {
     return this.cloudinaryService.updatePrismaEntityFile('user', user.id, file);
   }
 
-  async getUserProfile(id: number) {
+  async getUserProfile(id: number, query: GetUserProfile) {
+    const options: {
+      include:{
+        [key: string]: boolean
+      }
+    } = {
+      include:{
+        address: true,
+      }
+    }
+
+    if (query.getMerchantDetails) {
+      options.include.merchantDetails = true
+    }
     return this.findUnique(
       { id },
-      {
-        include: {
-          address: true,
-        },
-      },
+      options,
     );
   }
 }

@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { FormDataRequest } from 'nestjs-form-data';
 import {
   GetAddress,
+  GetUserProfile,
   ProfilePhotoValidation,
   QueryLocations,
   UpdateUserAddress,
@@ -25,8 +26,8 @@ export class UserController {
   }
 
   @Get('profile')
-  getProfile(@User() user) {
-    return this.userService.getUserProfile(user.id);
+  getProfile(@User() user, @Query() query: GetUserProfile) {
+    return this.userService.getUserProfile(user.id, query);
   }
 
   @Put('profile')

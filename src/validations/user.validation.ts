@@ -1,6 +1,7 @@
 import { AddressType, UserRole } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -82,4 +83,11 @@ export class UpdateUserProfile {
   @IsNotEmpty()
   @IsOptional()
   password: string;
+}
+
+export class GetUserProfile {
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  getMerchantDetails: boolean;
 }
