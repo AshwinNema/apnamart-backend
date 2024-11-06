@@ -18,6 +18,7 @@ import {
   QuerySubCategories,
   SubcategoryUploadFile,
   SubCategoryValidator,
+  UpdateSubCategoryValidation,
 } from 'src/validations/subcategory.validation';
 import { SubcategoryService } from './subcategory.service';
 import { SubCategoryInterface } from 'src/interfaces';
@@ -76,10 +77,9 @@ export class SubcategoryController {
   @Roles(UserRole.admin)
   updateSubCategory(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: SubCategoryInterface,
-    @RequestProcessor() _,
+    @RequestProcessor() req,
   ) {
-    return this.subCategoryService.updateSubCategoryById(id, body);
+    return this.subCategoryService.updateSubCategoryById(id, req.body);
   }
 
   @Delete(':id')

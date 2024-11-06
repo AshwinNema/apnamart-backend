@@ -19,15 +19,20 @@ export class ItemService {
 
   async createItem(
     body: Prisma.ItemUncheckedCreateInput,
-    file: Express.Multer.File,
+    file?: Express.Multer.File,
   ) {
-    const uploadedFile: CloudinaryResponse =
-      await this.cloudinaryService.uploadFile(file);
+    const fileDetails: { photo?: string; cloudinary_public_id?: string } = {};
+    if (file) {
+      const uploadedFile: CloudinaryResponse =
+        await this.cloudinaryService.uploadFile(file);
+      fileDetails.photo = uploadedFile.secure_url;
+      fileDetails.cloudinary_public_id = uploadedFile.public_id;
+    }
+
     return prisma.item.create({
       data: {
         ...body,
-        photo: uploadedFile.secure_url,
-        cloudinary_public_id: uploadedFile.public_id,
+        ...fileDetails,
       },
     });
   }

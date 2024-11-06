@@ -45,7 +45,7 @@ export class CloudinaryService {
       );
     }
     const { cloudinary_public_id } = entityData;
-    await this.deleteFile(cloudinary_public_id);
+    cloudinary_public_id && (await this.deleteFile(cloudinary_public_id));
     return entityData;
   }
 

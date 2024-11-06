@@ -35,7 +35,17 @@ export class ItemFileUpload {
   file: Express.Multer.File;
 }
 
-export class CreateItemValidation extends ItemFileUpload {
+export class CreateItemValidation {
+  @IsOptional()
+  @IsFile()
+  @MaxFileSize(4e6, {
+    message: 'Maximum size of the file should be 4 mega byte',
+  })
+  @HasMimeType(mimeTypes.image, {
+    message: 'File must be an image',
+  })
+  file: Express.Multer.File;
+
   @IsString()
   @IsNotEmpty()
   data: string;
@@ -57,7 +67,7 @@ export class CreateItemValidator {
   subCategoryId: number;
 
   @Transform(validateMainFilter())
-  @ArrayMinSize(1)
+  @IsOptional()
   @ArrayUnique((option) => option.name, {
     message: 'All filter names should be unique',
   })

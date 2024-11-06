@@ -30,8 +30,8 @@ model SubCategory {
 model Item {
   id                   Int          @id @default(autoincrement())
   name                 String
-  photo                String
-  cloudinary_public_id String
+  photo                String?
+  cloudinary_public_id String?
   subCategory          SubCategory  @relation(fields: [subCategoryId], references: [id])
   subCategoryId        Int
   user                 User         @relation(fields: [createdBy], references: [id])
