@@ -51,21 +51,18 @@ export class UserService {
 
   async getUserProfile(id: number, query: GetUserProfile) {
     const options: {
-      include:{
-        [key: string]: boolean
-      }
+      include: {
+        [key: string]: boolean;
+      };
     } = {
-      include:{
+      include: {
         address: true,
-      }
-    }
+      },
+    };
 
     if (query.getMerchantDetails) {
-      options.include.merchantDetails = true
+      options.include.merchantDetails = true;
     }
-    return this.findUnique(
-      { id },
-      options,
-    );
+    return this.findUnique({ id }, options);
   }
 }

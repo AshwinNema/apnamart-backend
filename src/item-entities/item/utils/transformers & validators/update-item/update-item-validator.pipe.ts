@@ -46,15 +46,15 @@ export class UpdateItemValidator implements PipeTransform {
       throw new NotFoundException('Item not found');
     }
     await validateUpdatedCatSubCat(body, id, data);
-    const newFilterCount =
-      data.filters.length +
-      (body?.newFilters?.length || 0) -
-      (body?.deleteFilters?.length || 0);
+    // const newFilterCount =
+    //   data.filters.length +
+    //   (body?.newFilters?.length || 0) -
+    //   (body?.deleteFilters?.length || 0);
 
-    if (newFilterCount === 0)
-      throw new BadRequestException(
-        'There has to be atleast one filter in the item',
-      );
+    // if (newFilterCount === 0)
+    //   throw new BadRequestException(
+    //     'There has to be atleast one filter in the item',
+    //   );
     const filterMapsAndMainFilter = getFilterMapsAndMainFilter(data);
     const mainFilterDetails = {
       updatedMainFilter: null,

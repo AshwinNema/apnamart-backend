@@ -47,3 +47,14 @@ export class CreateSubCatValidation extends SubcategoryUploadFile {
   @IsNotEmpty()
   data: string;
 }
+
+export class UpdateSubCategoryValidation {
+  @IsOptional()
+  @IsString()
+  name: string;
+
+  @Min(1)
+  @IsInt()
+  @IsOptional()
+  categoryId: number;
+}

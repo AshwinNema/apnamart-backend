@@ -54,13 +54,13 @@ export class ItemController {
   @UsePipes(new MultiPartDataPipe(CreateItemValidator))
   @FormDataRequest()
   createItems(
-    @Body() _: CreateItemValidation,
+    @Body() rawBody: CreateItemValidation,
     @RequestProcessor() processedRequest,
   ) {
     const {
-      body: { file, data },
+      body: { data },
     } = processedRequest;
-    return this.itemService.createItem(data, file);
+    return this.itemService.createItem(data, rawBody.file);
   }
 
   @Put('image/:id')
@@ -82,9 +82,7 @@ export class ItemController {
   @UsePipes(new UpdateItemPayloadTransformPipe())
   @UsePipes(new UpdateItemValidator())
   @Roles(UserRole.admin)
-  updateItemById(
-    @RequestProcessor() { body },
-  ) {
+  updateItemById(@RequestProcessor() { body }) {
     return this.itemService.updateItemById(body);
   }
   @Delete(':id')

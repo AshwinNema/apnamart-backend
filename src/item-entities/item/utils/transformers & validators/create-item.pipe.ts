@@ -9,12 +9,11 @@ import prisma from 'src/prisma/client';
 import { CreateItemValidator } from 'src/validations';
 
 const validateCreateItem = async (data: CreateItemValidator) => {
-
   const subCategoryData = await prisma.subCategory.findUnique({
     where: { id: data.subCategoryId },
-    include:{
-      category:true
-    }
+    include: {
+      category: true,
+    },
   });
 
   if (!subCategoryData) {
@@ -50,7 +49,11 @@ export class ValidateAndTransformCreateDataPipe implements PipeTransform {
     const data = JSON.parse(body.data);
     await validateCreateItem(data);
     data.createdBy = user.id;
-    if (!data?.filters?.length) return;
+    if (!data?.filters?.length) {
+      body.data = data;
+      value.body = body;
+      return value;
+    }
     data.filters = {
       create: data.filters.map((filter) => {
         filter.createdBy = user.id;

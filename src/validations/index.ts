@@ -35,7 +35,7 @@ export const requiredStringValidation = (keyName: string) => {
 
 export * from './auth';
 export * from './category.validation';
-export * from "./subcategory.validation";
+export * from './subcategory.validation';
 export * from './common.validation';
 export * from './product';
 export * from './user.validation';

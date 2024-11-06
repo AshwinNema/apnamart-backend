@@ -34,7 +34,10 @@ export class SubcategoryService {
     });
   }
 
-  async updateSubCategoryById(id: number, update: SubCategoryInterface) {
+  async updateSubCategoryById(
+    id: number,
+    update: Prisma.SubCategoryUpdateInput,
+  ) {
     return prisma.subCategory.update({
       where: { id },
       data: update,
