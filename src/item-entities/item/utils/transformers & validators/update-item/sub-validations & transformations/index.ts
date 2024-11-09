@@ -68,8 +68,8 @@ export const clearPrevMainFilter = (value, mainFilterDetails) => {
   if (mainFilterDetails.isPrevMainFilterDeleted) return;
   if (!mainFilterDetails.updatedMainFilter) return;
   if (
-    mainFilterDetails.updatedMainFilter.id ===
-    mainFilterDetails.prevMainFilter.id
+    mainFilterDetails?.updatedMainFilter?.id ===
+    mainFilterDetails?.prevMainFilter?.id
   )
     return;
   if (
@@ -77,14 +77,15 @@ export const clearPrevMainFilter = (value, mainFilterDetails) => {
     !mainFilterDetails?.curPrevFilter?.isMainFilter
   )
     return;
-  if (mainFilterDetails.curPrevFilterIndex != null) {
+  if (mainFilterDetails?.curPrevFilterIndex != null) {
     value.body.updateFilters[
-      mainFilterDetails.curPrevFilterIndex
+      mainFilterDetails?.curPrevFilterIndex
     ].isMainFilter = false;
     return;
   }
-  value.body.updateFilters.push({
-    id: mainFilterDetails.prevMainFilter.id,
-    isMainFilter: false,
-  });
+  mainFilterDetails?.prevMainFilter &&
+    value.body.updateFilters.push({
+      id: mainFilterDetails?.prevMainFilter.id,
+      isMainFilter: false,
+    });
 };

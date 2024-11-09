@@ -1,5 +1,4 @@
 import {
-  ArrayMinSize,
   ArrayUnique,
   IsArray,
   IsInt,
@@ -89,4 +88,10 @@ export class getItemListValidation {
   @IsOptional()
   @Type(() => Number)
   categoryId: number;
+
+  @Min(1)
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  subCategoryId: number;
 }

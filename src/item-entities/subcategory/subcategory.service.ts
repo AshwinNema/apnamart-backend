@@ -3,7 +3,6 @@ import { Prisma } from '@prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
 import { CloudinaryResponse } from '../../utils/types';
 import prisma from 'src/prisma/client';
-import { SubCategoryInterface } from 'src/interfaces';
 
 @Injectable()
 export class SubcategoryService {

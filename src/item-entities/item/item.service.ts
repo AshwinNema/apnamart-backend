@@ -84,7 +84,19 @@ export class ItemService {
   }
 
   async searchByName(term: string) {
-    return prisma.$queryRaw`SELECT "id", "name", "photo" FROM "public"."Item" WHERE ("archive"=false AND to_tsvector('english', "public"."Item"."name") @@ to_tsquery('english', ${term}));`;
+    return prisma.item.findMany({
+      where: {
+        name: {
+          contains: term,
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        name: true,
+        id: true,
+        photo: true,
+      },
+    });
   }
 
   async getItemsList(query: getItemListValidation) {

@@ -18,10 +18,8 @@ import {
   QuerySubCategories,
   SubcategoryUploadFile,
   SubCategoryValidator,
-  UpdateSubCategoryValidation,
 } from 'src/validations/subcategory.validation';
 import { SubcategoryService } from './subcategory.service';
-import { SubCategoryInterface } from 'src/interfaces';
 import { SkipAccessAuth } from 'src/auth/jwt/access.jwt';
 import { MultiPartDataPipe } from 'src/pipes';
 import { RequestProcessor } from 'src/decorators';
@@ -57,7 +55,6 @@ export class SubcategoryController {
     @Body() rawBody: CreateSubCatValidation,
     @RequestProcessor() processedRequest,
   ) {
-    const { body } = processedRequest;
     const data = Object(processedRequest.body.data);
     return this.subCategoryService.createSubCategory(data, rawBody.file);
   }

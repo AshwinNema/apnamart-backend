@@ -84,3 +84,17 @@ export class QueryProducts extends paginationOptions {
   @IsOptional()
   id: number;
 }
+
+export class QueryCustomerProducts extends paginationOptions {
+  @Min(1)
+  @IsInt()
+  @Type(() => Number)
+  @IsOptional()
+  itemId: number;
+
+  @Min(1)
+  @IsInt()
+  @Type(() => Number)
+  @IsOptional()
+  subCategoryId: number;
+}

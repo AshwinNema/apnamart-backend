@@ -72,6 +72,10 @@ export const updateProductBasicValidation = z.object({
       requiredStringValidation('Description'),
     ])
     .optional(),
+  highlights: z
+    .array(requiredStringValidation('Hight Point'))
+    .min(4)
+    .optional(),
 });
 
 export const basicProductDetailsValidation = z.object({
@@ -87,4 +91,5 @@ export const basicProductDetailsValidation = z.object({
     seriesDescriptionValidation,
     requiredStringValidation('Description'),
   ]),
+  highlights: z.array(requiredStringValidation('Hight Point')).min(4),
 });

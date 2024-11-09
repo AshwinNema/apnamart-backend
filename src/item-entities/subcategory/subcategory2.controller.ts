@@ -9,7 +9,7 @@ export class Subcategory2Controller {
   constructor(private subCategoryService: SubcategoryService) {}
 
   @Get('list')
-  @Roles(UserRole.admin)
+  @Roles(UserRole.admin, UserRole.merchant)
   async subCatList(@Query() query: SubCatListValidator) {
     return this.subCategoryService.getSubCatList(query);
   }
