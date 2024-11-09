@@ -1,6 +1,5 @@
 import {
   ArgumentMetadata,
-  BadRequestException,
   NotFoundException,
   PipeTransform,
 } from '@nestjs/common';

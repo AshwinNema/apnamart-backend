@@ -10,17 +10,12 @@ import {
 } from 'src/validations';
 import * as _ from 'lodash';
 import { descriptionFileValidation, itemValidation } from './validations';
-import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
 import { createProductProcessedBody } from 'src/item-entities/product/interfaces';
 import prisma from 'src/prisma/client';
 import { MerchantRegistrationStatus } from '@prisma/client';
 
 @Injectable()
 export class CreateProductTransformer implements PipeTransform {
-  cloudinaryService: CloudinaryService;
-  constructor() {
-    this.cloudinaryService = new CloudinaryService();
-  }
   async transform(
     value: any,
     metadata: ArgumentMetadata,
@@ -49,6 +44,7 @@ export class CreateProductTransformer implements PipeTransform {
       'filterOptions',
       'specification',
       'description',
+      'highlights',
     ]);
     const basicProductDetails = basicProductDetailsValidation.parse(details);
     await itemValidation(details.itemId, details.filterOptions);
@@ -78,6 +74,7 @@ export class CreateProductTransformer implements PipeTransform {
       description: {
         details: basicProductDetails.description,
       },
+      highlights: basicProductDetails.highlights,
       specification: basicProductDetails.specification,
       filterOptions: {
         connect: basicProductDetails.filterOptions.map((optionId) => ({

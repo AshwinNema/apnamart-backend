@@ -16,6 +16,7 @@ import { RequestProcessor, User } from 'src/decorators';
 import {
   CreateProductValidation,
   QueryProducts,
+  QueryCustomerProducts,
   UpdateProductValidation,
 } from 'src/validations';
 import { ProductService } from './product.service';
@@ -26,6 +27,8 @@ import { queryProductArgs } from './utils';
 import { UpdateProductTransformer } from './utils/transformers/update';
 import { ProductUpdateService } from './product-update/product-update.service';
 import { processedUpdateProduct } from './interfaces';
+import { SkipAccessAuth } from 'src/auth/jwt/access.jwt';
+import { Product2Service } from './product2.service';
 
 @Controller('product')
 export class ProductController {
@@ -33,9 +36,11 @@ export class ProductController {
     private productService: ProductService,
     private productUpdateService: ProductUpdateService,
     private commonService: CommonService,
+    private product2Service: Product2Service,
   ) {}
 
-  @Get()
+  @Roles(UserRole.merchant)
+  @Get('by-merchant')
   queryProducts(@Query() query: QueryProducts, @User() user: UserInterface) {
     return this.commonService.queryData(...queryProductArgs(query, user));
   }
@@ -67,5 +72,11 @@ export class ProductController {
   @Roles(UserRole.merchant, UserRole.merchant)
   async getProductFilters(@Param('id', ParseIntPipe) id: number) {
     return this.productService.getProductFilters(id);
+  }
+
+  @SkipAccessAuth()
+  @Get('by-customer')
+  queryCustomerProducts(@Query() query: QueryCustomerProducts) {
+    return this.product2Service.queryCustomerProducts(query);
   }
 }

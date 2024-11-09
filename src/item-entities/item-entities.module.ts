@@ -12,6 +12,7 @@ import { ProductUpdateService } from './product/product-update/product-update.se
 import { SubcategoryController } from './subcategory/subcategory.controller';
 import { Subcategory2Controller } from './subcategory/subcategory2.controller';
 import { SubcategoryService } from './subcategory/subcategory.service';
+import { Product2Service } from './product/product2.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SubcategoryService } from './subcategory/subcategory.service';
     SubcategoryService,
     CommonService,
     ProductUpdateService,
+    Product2Service,
   ],
   controllers: [
     CategoryController,

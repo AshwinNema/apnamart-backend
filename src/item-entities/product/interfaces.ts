@@ -50,6 +50,7 @@ export interface createProductProcessedBody {
     }[];
   };
   isBlocked: boolean;
+  highlights: string[];
 }
 
 export interface basicProductUpdateDetails {
@@ -70,6 +71,7 @@ export interface updateProductDetails {
     disconnect?: { id: number }[];
   };
   description?: createProductProcessedBody['description']['details'];
+  highlights?: string[];
 }
 
 export interface processedUpdateProduct {
@@ -77,6 +79,7 @@ export interface processedUpdateProduct {
   updatedDescriptionImgIds?: string[];
   deletedProductImgIds?: string[];
   deletedDescriptionPhotos?: string[];
+  highlights?: string[];
   currentDescription: databaseDescription;
   currentPhotos: uploadedPhoto[];
 }

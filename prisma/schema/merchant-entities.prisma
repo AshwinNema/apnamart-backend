@@ -28,6 +28,7 @@ model Product {
   photos        Json
   description   Json
   specification Json
+  highlights    Json
   item          Item               @relation(fields: [itemId], references: [id])
   itemId        Int
   filterOptions ItemFilterOption[]
