@@ -13,6 +13,13 @@ export interface UserInterface {
   updatedAt: Date;
   isBlackListed: boolean;
   archive: boolean;
+  wishList?: {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    archive: boolean;
+    userId: number;
+  };
 }
 
 export interface ValidatedObject {

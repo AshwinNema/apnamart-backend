@@ -43,3 +43,4 @@ export * from './delivery-location.validation';
 export * from './item-validation';
 export * from './merchant-validations';
 export * from './communication';
+export * from './customer.validation';

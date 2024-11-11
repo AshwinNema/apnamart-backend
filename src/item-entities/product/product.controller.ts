@@ -75,8 +75,16 @@ export class ProductController {
   }
 
   @SkipAccessAuth()
-  @Get('by-customer')
-  queryCustomerProducts(@Query() query: QueryCustomerProducts) {
+  @Get('by-customer-unlogged')
+  queryNotLoggedCustomerProducts(@Query() query: QueryCustomerProducts) {
     return this.product2Service.queryCustomerProducts(query);
+  }
+
+  @Get('by-customer-logged-in')
+  queryLoggerCustomerProducts(
+    @Query() query: QueryCustomerProducts,
+    @User() user,
+  ) {
+    return this.product2Service.queryCustomerProducts(query, user);
   }
 }
