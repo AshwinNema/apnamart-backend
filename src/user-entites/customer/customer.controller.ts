@@ -8,7 +8,11 @@ import {
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { SkipAccessAuth } from 'src/auth/jwt/access.jwt';
-import { AddRemoveWishlistItem, booleanEnum } from 'src/validations';
+import {
+  AddRemoveCartItem,
+  AddRemoveWishlistItem,
+  booleanEnum,
+} from 'src/validations';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { User } from 'src/decorators';
@@ -34,6 +38,21 @@ export class CustomerController {
       user.id,
       productId,
       query.connect === booleanEnum.true,
+    );
+  }
+
+  @Roles(UserRole.customer)
+  @Put('add-remove-cart-item/:productId')
+  addRemoveCartItem(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Query() query: AddRemoveCartItem,
+    @User() user,
+  ) {
+    return this.customerService.addRemoveCartItem(
+      user.id,
+      productId,
+      query.connect === booleanEnum.true,
+      query.quantity,
     );
   }
 }

@@ -75,7 +75,7 @@ export class ProductController {
   }
 
   @SkipAccessAuth()
-  @Get('by-customer-unlogged')
+  @Get('by-customer-not-logged-in')
   queryNotLoggedCustomerProducts(@Query() query: QueryCustomerProducts) {
     return this.product2Service.queryCustomerProducts(query);
   }
@@ -86,5 +86,16 @@ export class ProductController {
     @User() user,
   ) {
     return this.product2Service.queryCustomerProducts(query, user);
+  }
+
+  @SkipAccessAuth()
+  @Get('by-id-not-logged-in/:id')
+  byIdNotLoggedIn(@Param('id', ParseIntPipe) id: number) {
+    return this.product2Service.getProductById(id);
+  }
+
+  @Get('by-id-logged-in/:id')
+  byIdLogged(@Param('id', ParseIntPipe) id: number, @User() user) {
+    return this.product2Service.getProductById(id, user);
   }
 }

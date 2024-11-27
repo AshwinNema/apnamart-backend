@@ -11,6 +11,8 @@ import { UserAddressService } from './user/user-address.service';
 import { MerchantModule } from './merchant/merchant.module';
 import { RouterModule } from '@nestjs/core';
 import { ProductService } from 'src/item-entities/product/product.service';
+import { Product2Service } from 'src/item-entities/product/product2.service';
+import { CommonService } from 'src/common/common.service';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { ProductService } from 'src/item-entities/product/product.service';
     UserService,
     UserAddressService,
     ProductService,
+    Product2Service,
+    CommonService,
   ],
   controllers: [AdminController, CustomerController, UserController],
   exports: [AdminService, CustomerService, UserService],

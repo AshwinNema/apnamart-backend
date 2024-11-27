@@ -5,6 +5,7 @@ model Cart {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   archive   Boolean  @default(false)
+  cartItems Json
 }
 
 model WishList {

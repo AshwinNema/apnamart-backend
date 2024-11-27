@@ -58,9 +58,9 @@ export class CreateProductTransformer implements PipeTransform {
       );
     }
 
-    if (productImgLength > 4) {
+    if (productImgLength > 20) {
       throw new BadRequestException(
-        'Only maximum of 4 product images are allowed',
+        'Only maximum of 20 product images are allowed',
       );
     }
 
