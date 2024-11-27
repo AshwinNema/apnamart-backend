@@ -52,6 +52,7 @@ export const queryProductArgs = (
 };
 export const queryCustomerProducts = (
   query: QueryCustomerProducts,
+  user?: UserInterface,
 ): [
   string,
   {
@@ -86,6 +87,14 @@ export const queryCustomerProducts = (
       },
     },
   };
+
+  if (user) {
+    productQuery.include.wishList = {
+      where: {
+        userId: user.id,
+      },
+    };
+  }
 
   if (query.subCategoryId) {
     productQuery.where.item = {

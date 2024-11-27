@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
 import { UserInterface } from 'src/interfaces';
 import prisma from 'src/prisma/client';
 import { CloudinaryService } from 'src/uploader/cloudinary/cloudinary.service';
@@ -16,7 +17,9 @@ export class UserService {
     this.ola_api_key = this.configService.get('ola_maps').api_key;
   }
 
-  async createUser(data): Promise<UserInterface | UserInterface[]> {
+  async createUser(
+    data: Prisma.UserCreateInput,
+  ): Promise<UserInterface | UserInterface[]> {
     const newUser = await prisma.user.create({
       data,
     });

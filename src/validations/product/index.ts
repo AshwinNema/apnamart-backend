@@ -12,9 +12,9 @@ export class UpdateProductValidation {
   data: string;
 
   @IsFiles()
-  @MaxFileSize(4e6, {
+  @MaxFileSize(0.5e6, {
     each: true,
-    message: 'Maximum size of the description should be 4 mega byte',
+    message: 'Maximum size of the description should be 0.5 mega byte',
   })
   @HasMimeType(mimeTypes.image, {
     each: true,
@@ -54,9 +54,9 @@ export class CreateProductValidation {
   data: string;
 
   @IsFiles()
-  @MaxFileSize(4e6, {
+  @MaxFileSize(0.5e6, {
     each: true,
-    message: 'Maximum size of the description should be 4 mega byte',
+    message: 'Maximum size of the product image should be 0.5 mega byte',
   })
   @HasMimeType(mimeTypes.image, {
     each: true,

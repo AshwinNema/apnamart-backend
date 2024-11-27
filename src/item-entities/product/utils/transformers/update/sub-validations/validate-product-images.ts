@@ -29,4 +29,7 @@ export const validateProductImages = (
   if (newProductFileCount === 0) {
     throw new BadRequestException('There has to be atleast one product image');
   }
+  if (newProductFileCount > 20) {
+    throw new BadRequestException('New image count cannot exceed more than 20');
+  }
 };

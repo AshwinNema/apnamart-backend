@@ -5,15 +5,17 @@ model Cart {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   archive   Boolean  @default(false)
+  cartItems Json
 }
 
 model WishList {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  archive   Boolean  @default(false)
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int       @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  archive   Boolean   @default(false)
 }
 
 model UserAddress {
