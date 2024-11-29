@@ -2,7 +2,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
-  IsBoolean,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -10,11 +10,13 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+
 import {
   FilterOptionValidation,
   validateDeleteIds,
   validateDuplicatesNames,
-} from '../sub-validations';
+} from '../filter-subvalidations';
+import { ItemFilterType } from '@prisma/client';
 
 class UpdateFilterOption extends FilterOptionValidation {
   @Min(1)
@@ -33,10 +35,6 @@ export class updateFilter {
   name: string;
 
   @IsOptional()
-  @IsBoolean()
-  isMainFilter: boolean;
-
-  @IsOptional()
   @ArrayUnique((option) => option.name, {
     message: 'All the option names for the filter must be unique',
   })
@@ -51,6 +49,11 @@ export class updateFilter {
   @ArrayUnique((id) => id)
   @IsOptional()
   deleteOptions: number[];
+
+  @IsOptional()
+  @IsEnum(ItemFilterType)
+  @IsString()
+  filterType: ItemFilterType;
 
   @Transform(
     validateDuplicatesNames(

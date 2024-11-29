@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product2Service } from 'src/item-entities/product/product2.service';
 import prisma from 'src/prisma/client';
 

@@ -14,8 +14,8 @@ import {
   validateDuplicatesNames,
   CreateFilterValidation,
   validateDeleteIds,
-  validateMainFilter,
-} from '../sub-validations';
+  validateFilterType,
+} from '../filter-subvalidations';
 
 export class UpdateItem {
   @IsString()
@@ -49,7 +49,7 @@ export class UpdateItem {
   @IsOptional()
   deleteFilters: number[];
 
-  @Transform(validateMainFilter('newFilters'))
+  @Transform(validateFilterType('newFilters', true))
   @Transform(
     validateDuplicatesNames(
       'newFilters',
@@ -66,5 +66,6 @@ export class UpdateItem {
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => updateFilter)
+  @IsOptional()
   updateFilters: updateFilter[];
 }

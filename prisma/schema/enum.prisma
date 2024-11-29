@@ -51,3 +51,9 @@ enum MerchantRegistrationStatus {
   review_by_admin
   completed
 }
+
+enum ItemFilterType {
+  price
+  userMenu
+  normal
+}
