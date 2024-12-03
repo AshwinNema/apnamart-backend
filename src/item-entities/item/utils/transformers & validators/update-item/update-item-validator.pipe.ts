@@ -5,18 +5,16 @@ import {
 } from '@nestjs/common';
 import prisma from 'src/prisma/client';
 import {
-  clearPrevMainFilter,
+  clearPreviousFilterTypes,
   validateDeleteFilters,
-  validateMainFilters,
   validateNewFilters,
   validateUpdatedCatSubCat,
   validateUpdateFilters,
 } from './sub-validations & transformations';
-import {
-  getFilterMapsAndMainFilter,
-  getPrismaQuery,
-} from './data-transformers';
+import { getFilterMaps, getPrismaQuery } from './data-transformers';
 import { UpdateItem } from 'src/validations';
+import { validateOrReject } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 // Please Note: We only check here the data for which we need to check it through the database. The remaining checks are handled through class validators.This is the validation for items, there are following dependency checks:
 // 1. Duplicate name check - No other item with the same category should have the same name
@@ -35,6 +33,10 @@ export class UpdateItemValidator implements PipeTransform {
   async transform(value, metadata: ArgumentMetadata) {
     if (metadata.type !== 'custom') return value;
     const body: UpdateItem = value.body;
+    await validateOrReject(plainToClass(UpdateItem, body), {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
     let {
       params: { id },
     } = value;
@@ -54,32 +56,27 @@ export class UpdateItemValidator implements PipeTransform {
     //   throw new BadRequestException(
     //     'There has to be atleast one filter in the item',
     //   );
-    const filterMapsAndMainFilter = getFilterMapsAndMainFilter(data);
+    const filterMaps = getFilterMaps(data);
     const mainFilterDetails = {
-      updatedMainFilter: null,
-      prevMainFilter: filterMapsAndMainFilter.mainFilter,
-      isPrevMainFilterDeleted: false,
-      curPrevFilter: null,
-      curPrevFilterIndex: null,
+      updatedDifferentFilterTypeMap: {},
+      deletedFilterIds: {},
+      updatedIdToDetailsMap: {},
     };
+
     validateNewFilters(
       body?.newFilters,
-      filterMapsAndMainFilter.nameToIdMap,
-      mainFilterDetails,
+      filterMaps.nameToIdMap,
+      mainFilterDetails.updatedDifferentFilterTypeMap,
     );
-    validateUpdateFilters(
-      body?.updateFilters,
-      filterMapsAndMainFilter,
-      mainFilterDetails,
-    );
+    validateUpdateFilters(body?.updateFilters, filterMaps, mainFilterDetails);
+
     validateDeleteFilters(
       body?.deleteFilters,
-      filterMapsAndMainFilter.idMap,
+      filterMaps.idMap,
       mainFilterDetails,
     );
 
-    validateMainFilters(mainFilterDetails);
-    clearPrevMainFilter(value, mainFilterDetails);
+    clearPreviousFilterTypes(mainFilterDetails, filterMaps, value);
     return value;
   }
 }

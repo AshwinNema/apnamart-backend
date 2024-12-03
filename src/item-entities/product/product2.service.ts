@@ -15,7 +15,6 @@ export class Product2Service {
     user?: UserInterface,
   ) {
     let entityData = null;
-
     if (query.itemId) {
       entityData = await prisma.item.findUnique({
         where: { id: query.itemId },

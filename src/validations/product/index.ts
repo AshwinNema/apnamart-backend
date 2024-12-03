@@ -1,9 +1,8 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { HasMimeType, IsFiles, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes } from 'src/utils';
-import { paginationOptions } from '../common.validation';
-import { Type } from 'class-transformer';
 
+export * from './query-products';
 export * from './subvalidations';
 
 export class UpdateProductValidation {
@@ -75,26 +74,4 @@ export class CreateProductValidation {
   })
   @IsOptional()
   descriptionFiles: Express.Multer.File[];
-}
-
-export class QueryProducts extends paginationOptions {
-  @Min(1)
-  @IsInt()
-  @Type(() => Number)
-  @IsOptional()
-  id: number;
-}
-
-export class QueryCustomerProducts extends paginationOptions {
-  @Min(1)
-  @IsInt()
-  @Type(() => Number)
-  @IsOptional()
-  itemId: number;
-
-  @Min(1)
-  @IsInt()
-  @Type(() => Number)
-  @IsOptional()
-  subCategoryId: number;
 }

@@ -1,3 +1,5 @@
+import { ItemFilterType } from '@prisma/client';
+
 export const getPrismaQuery = (id: number) => {
   return {
     where: { id },
@@ -29,20 +31,31 @@ export const getPrismaQuery = (id: number) => {
   };
 };
 
-export const getFilterMapsAndMainFilter = (data) => {
-  const { idMap, nameToIdMap, mainFilter } = data.filters.reduce(
+export const getFilterMaps = (data) => {
+  const {
+    idMap,
+    nameToIdMap,
+    differentFilterTypeToIdMap,
+    filterIdToFilterTypeMap,
+  } = data.filters.reduce(
     (map, filter) => {
-      const { idMap, nameToIdMap } = map;
-      const { id, name, isMainFilter } = filter;
+      const {
+        idMap,
+        nameToIdMap,
+        differentFilterTypeToIdMap,
+        filterIdToFilterTypeMap,
+      } = map;
+      const { id, name, filterType } = filter;
       nameToIdMap[name] = id;
-      if (isMainFilter) {
-        map.mainFilter = filter;
+      if (filterType !== ItemFilterType.normal) {
+        differentFilterTypeToIdMap[filterType] = id;
+        filterIdToFilterTypeMap[id] = filterType;
       }
       idMap[id] = filter.options.reduce(
         (map, option) => {
           const { optionIdMap, optionNameToIdMap } = map;
           const { id, name } = option;
-          optionIdMap[id] = true;
+          optionIdMap[id] = name;
           optionNameToIdMap[name] = id;
           return map;
         },
@@ -50,7 +63,12 @@ export const getFilterMapsAndMainFilter = (data) => {
       );
       return map;
     },
-    { idMap: {}, nameToIdMap: {}, mainFilter: null },
+    {
+      idMap: {},
+      nameToIdMap: {},
+      differentFilterTypeToIdMap: {},
+      filterIdToFilterTypeMap: {},
+    },
   );
 
   const productOptionsMap = data.product.reduce((obj, item) => {
@@ -60,5 +78,11 @@ export const getFilterMapsAndMainFilter = (data) => {
 
     return obj;
   }, {});
-  return { idMap, nameToIdMap, productOptionsMap, mainFilter };
+  return {
+    idMap,
+    nameToIdMap,
+    productOptionsMap,
+    differentFilterTypeToIdMap,
+    filterIdToFilterTypeMap,
+  };
 };
