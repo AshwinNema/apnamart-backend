@@ -1,5 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsString, Min, ValidateIf } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 
 export enum booleanEnum {
   true = 'true',
@@ -16,10 +15,4 @@ export class AddRemoveCartItem {
   @IsEnum(booleanEnum)
   @IsString()
   connect: string;
-
-  @Min(1)
-  @IsInt()
-  @Type(() => Number)
-  @ValidateIf((details) => details.connect === booleanEnum.true)
-  quantity: number;
 }

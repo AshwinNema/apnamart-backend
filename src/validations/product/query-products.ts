@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  Min,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsInt, IsOptional, Min } from 'class-validator';
 import { paginationOptions } from '../common.validation';
 import { Transform, Type } from 'class-transformer';
 

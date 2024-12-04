@@ -13,6 +13,7 @@ import { RouterModule } from '@nestjs/core';
 import { ProductService } from 'src/item-entities/product/product.service';
 import { Product2Service } from 'src/item-entities/product/product2.service';
 import { CommonService } from 'src/common/common.service';
+import { CustomerCartService } from './customer/customer-cart.service';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CommonService } from 'src/common/common.service';
     ProductService,
     Product2Service,
     CommonService,
+    CustomerCartService,
   ],
   controllers: [AdminController, CustomerController, UserController],
   exports: [AdminService, CustomerService, UserService],

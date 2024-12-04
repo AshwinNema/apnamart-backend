@@ -48,7 +48,7 @@ export const queryCustomerProducts = (
     };
   }
 
-  let minMaxPrice: {
+  const minMaxPrice: {
     gte?: number;
     lte?: number;
   } = {};
