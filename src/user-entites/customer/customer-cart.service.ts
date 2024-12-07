@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product2Service } from 'src/item-entities/product/product2.service';
 import prisma from 'src/prisma/client';
+import { validateIncreaseDecreaseCartItemAndGetCart } from './utils';
 
 @Injectable()
 export class CustomerCartService {
@@ -45,5 +46,51 @@ export class CustomerCartService {
     if (!userCart) return 0;
 
     return Object.keys(userCart.cartItems).length;
+  }
+
+  async getUserCartItems(userId: number) {
+    const userCart = await prisma.cart.findUnique({
+      where: { userId },
+    });
+
+    if (!userCart) return [];
+    const productIds = Object.keys(userCart.cartItems).map((productId) =>
+      parseInt(productId),
+    );
+    const products = await prisma.product.findMany({
+      where: {
+        id: { in: productIds },
+      },
+    });
+
+    return products.map((item) => {
+      return {
+        details: item,
+        count: userCart.cartItems[item.id] || 0,
+      };
+    });
+  }
+
+  async increaseDecreaseItemCount(
+    userId: number,
+    productId: number,
+    change?: 1 | -1,
+    quantity?: number,
+  ) {
+    const userCart = await validateIncreaseDecreaseCartItemAndGetCart(
+      userId,
+      productId,
+      change,
+      quantity,
+    );
+
+    return prisma.cart.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        cartItems: userCart.cartItems,
+      },
+    });
   }
 }

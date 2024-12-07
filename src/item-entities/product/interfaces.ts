@@ -51,6 +51,7 @@ export interface createProductProcessedBody {
   };
   isBlocked: boolean;
   highlights: string[];
+  allowedUnitsPerOrder: number;
 }
 
 export interface basicProductUpdateDetails {
@@ -63,6 +64,7 @@ export interface basicProductUpdateDetails {
 
 export interface updateProductDetails {
   name?: string;
+  allowedUnitsPerOrder?: number;
   itemId?: number;
   price?: number;
   specification?: specification;

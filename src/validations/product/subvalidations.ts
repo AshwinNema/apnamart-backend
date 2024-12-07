@@ -57,6 +57,7 @@ export const seriesSpecification = z
 export const updateProductBasicValidation = z.object({
   name: requiredStringValidation('Name').optional(),
   itemId: z.number().int().positive().optional(),
+  allowedUnitsPerOrder: z.number().int().positive().optional(),
   price: z.number().positive().optional(),
   filterOptions: z.array(z.number().positive().int()).optional(),
   updatedDescriptionImgIds: z.array(z.string()).optional(),
@@ -82,6 +83,7 @@ export const basicProductDetailsValidation = z.object({
   name: requiredStringValidation('Name'),
   itemId: z.number().int().positive(),
   price: z.number().positive(),
+  allowedUnitsPerOrder: z.number().int().positive(),
   filterOptions: z.array(z.number().positive().int()),
   specification: z.union([
     requiredStringValidation('Specification'),

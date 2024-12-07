@@ -45,6 +45,7 @@ export class CreateProductTransformer implements PipeTransform {
       'specification',
       'description',
       'highlights',
+      'allowedUnitsPerOrder',
     ]);
     const basicProductDetails = basicProductDetailsValidation.parse(details);
     await itemValidation(details.itemId, details.filterOptions);
@@ -74,6 +75,7 @@ export class CreateProductTransformer implements PipeTransform {
       description: {
         details: basicProductDetails.description,
       },
+      allowedUnitsPerOrder: basicProductDetails.allowedUnitsPerOrder,
       highlights: basicProductDetails.highlights,
       specification: basicProductDetails.specification,
       filterOptions: {

@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -12,6 +13,7 @@ import {
   AddRemoveCartItem,
   AddRemoveWishlistItem,
   booleanEnum,
+  IncreaseDecreaseCartItem,
 } from 'src/validations';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
@@ -63,5 +65,26 @@ export class CustomerController {
   @Get('cart-item-count')
   getCartItemCount(@User() user) {
     return this.customerCartService.getUserCartCount(user.id);
+  }
+
+  @Roles(UserRole.customer)
+  @Get('cart-item-list')
+  customerCartItemList(@User() user) {
+    return this.customerCartService.getUserCartItems(user.id);
+  }
+
+  @Roles(UserRole.customer)
+  @Put('increase-decrease-cart-item-count/:itemId')
+  increaseDecreaseCartItemCount(
+    @Param('itemId', ParseIntPipe) itemId: number,
+    @User() user,
+    @Body() body: IncreaseDecreaseCartItem,
+  ) {
+    return this.customerCartService.increaseDecreaseItemCount(
+      user.id,
+      itemId,
+      body.change,
+      body.quantity,
+    );
   }
 }

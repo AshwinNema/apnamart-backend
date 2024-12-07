@@ -44,6 +44,7 @@ export class UpdateProductTransformer {
       'deletedProductImgIds',
       'description',
       'highlights',
+      'allowedUnitsPerOrder',
     ]);
     const basicProductDetails = updateProductBasicValidation.parse(details);
     const { filterQuery, description, photos } =
@@ -75,6 +76,7 @@ export class UpdateProductTransformer {
       'specification',
       'description',
       'highlights',
+      'allowedUnitsPerOrder',
     ]);
 
     updateDetails.filterOptions = filterQuery.filterOptions;
