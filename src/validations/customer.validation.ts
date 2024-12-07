@@ -1,4 +1,3 @@
-import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsString, Min, ValidateIf } from 'class-validator';
 
 export enum booleanEnum {
@@ -16,10 +15,21 @@ export class AddRemoveCartItem {
   @IsEnum(booleanEnum)
   @IsString()
   connect: string;
+}
 
+export enum itemCountChange {
+  increase = 1,
+  decrease = -1,
+}
+
+export class IncreaseDecreaseCartItem {
+  @ValidateIf((details) => !details.change)
   @Min(1)
   @IsInt()
-  @Type(() => Number)
-  @ValidateIf((details) => details.connect === booleanEnum.true)
   quantity: number;
+
+  @ValidateIf((details) => !details.quantity)
+  @IsInt()
+  @IsEnum(itemCountChange)
+  change: -1 | 1;
 }

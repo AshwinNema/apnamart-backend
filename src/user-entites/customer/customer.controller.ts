@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -12,14 +13,19 @@ import {
   AddRemoveCartItem,
   AddRemoveWishlistItem,
   booleanEnum,
+  IncreaseDecreaseCartItem,
 } from 'src/validations';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { User } from 'src/decorators';
+import { CustomerCartService } from './customer-cart.service';
 
 @Controller('customer')
 export class CustomerController {
-  constructor(private customerService: CustomerService) {}
+  constructor(
+    private customerService: CustomerService,
+    private customerCartService: CustomerCartService,
+  ) {}
 
   @SkipAccessAuth()
   @Get('category-subcategory-item-menu')
@@ -48,11 +54,37 @@ export class CustomerController {
     @Query() query: AddRemoveCartItem,
     @User() user,
   ) {
-    return this.customerService.addRemoveCartItem(
+    return this.customerCartService.addRemoveCartItem(
       user.id,
       productId,
       query.connect === booleanEnum.true,
-      query.quantity,
+    );
+  }
+
+  @Roles(UserRole.customer)
+  @Get('cart-item-count')
+  getCartItemCount(@User() user) {
+    return this.customerCartService.getUserCartCount(user.id);
+  }
+
+  @Roles(UserRole.customer)
+  @Get('cart-item-list')
+  customerCartItemList(@User() user) {
+    return this.customerCartService.getUserCartItems(user.id);
+  }
+
+  @Roles(UserRole.customer)
+  @Put('increase-decrease-cart-item-count/:itemId')
+  increaseDecreaseCartItemCount(
+    @Param('itemId', ParseIntPipe) itemId: number,
+    @User() user,
+    @Body() body: IncreaseDecreaseCartItem,
+  ) {
+    return this.customerCartService.increaseDecreaseItemCount(
+      user.id,
+      itemId,
+      body.change,
+      body.quantity,
     );
   }
 }

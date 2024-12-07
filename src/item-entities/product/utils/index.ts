@@ -25,13 +25,6 @@ export const queryProductArgs = (
     ..._.pick(query, ['id']),
   };
 
-  const q1: Prisma.ProductFindManyArgs = {
-    where: {
-      filterOptions: {
-        every: {},
-      },
-    },
-  };
   return [
     'product',
     paginationOptions,
