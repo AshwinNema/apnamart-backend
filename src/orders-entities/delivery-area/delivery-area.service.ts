@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserInterface } from 'src/interfaces';
 import prisma from 'src/prisma/client';
+import { isWithinRange } from 'src/utils/delivery-area';
 import { UpdateMapState } from 'src/validations';
 
 @Injectable()
@@ -49,5 +50,22 @@ export class DeliveryAreaService {
 
   async findAllDeliveryAreas() {
     return prisma.deliveryArea.findMany({ where: {} });
+  }
+
+  async checkIsAreaDeliverable(details: {
+    latitude: number;
+    longtitude: number;
+  }) {
+    const deliveryAreas = await this.findAllDeliveryAreas();
+
+    return deliveryAreas.some((deliveryArea) =>
+      isWithinRange(
+        Number(deliveryArea.latitude),
+        Number(deliveryArea.longtitude),
+        details.latitude,
+        details.longtitude,
+        Number(deliveryArea.radius),
+      ),
+    );
   }
 }

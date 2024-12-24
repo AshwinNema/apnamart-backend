@@ -25,6 +25,8 @@ interface config {
   TWITTER_CONSUMER_SECRET: string;
   TWITTER_OAUTH_CALLBACK: string;
   OLA_MAPS_API_KEY: string;
+  RAZOR_PAY_KEY_ID: string;
+  RAZOR_PAY_KEY_SECRET: string;
 }
 
 const envVarsSchema = z.object({
@@ -51,6 +53,8 @@ const envVarsSchema = z.object({
   TWITTER_CONSUMER_SECRET: z.string(),
   TWITTER_OAUTH_CALLBACK: z.string(),
   OLA_MAPS_API_KEY: z.string(),
+  RAZOR_PAY_KEY_ID: z.string(),
+  RAZOR_PAY_KEY_SECRET: z.string(),
 });
 
 export const validateConfig = (config: config) => {

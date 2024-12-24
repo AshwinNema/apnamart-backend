@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Put } from '@nestjs/common';
+import { Body, Controller, Get, Put, Query } from '@nestjs/common';
 import { DeliveryAreaService } from './delivery-area.service';
-import { UpdateMapState } from 'src/validations';
+import { LatLng, UpdateMapState } from 'src/validations';
 import { User } from 'src/decorators';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
@@ -19,5 +19,13 @@ export class DeliveryAreaController {
   @Roles(UserRole.admin)
   updateDeliveryAreas(@Body() body: UpdateMapState, @User() user) {
     return this.deliveryAreaService.updateDeliveryAreas(body, user);
+  }
+
+  @Get('is-area-deliverable')
+  @Roles(UserRole.customer)
+  async checkIsAreaDeliveryAble(@Query() query: LatLng) {
+    const isAreaDeliverable =
+      await this.deliveryAreaService.checkIsAreaDeliverable(query);
+    return { isAreaDeliverable };
   }
 }
