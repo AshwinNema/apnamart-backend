@@ -3,7 +3,7 @@ import { UserInterface } from 'src/interfaces';
 import { DeliveryAreaService } from 'src/orders-entities/delivery-area/delivery-area.service';
 import prisma from 'src/prisma/client';
 import { LatLng } from 'src/validations';
-import * as _ from "lodash"
+import * as _ from 'lodash';
 
 export * from './create-checkout';
 
@@ -51,4 +51,15 @@ export const getUserAddress = async (user: UserInterface) => {
     'otherAddress',
   ]);
   return addressDetails;
+};
+
+export const getTotalOrderPrice = <
+  T extends { quantity: number; price: number },
+>(
+  checkoutItems: T[],
+) => {
+  return checkoutItems.reduce(
+    (totalPrice, item) => totalPrice + item.quantity * item.price,
+    0,
+  );
 };

@@ -80,10 +80,10 @@ export const getLoginOptions = (role: UserRole) => {
     case UserRole.customer:
       return {
         include: {
-          address: true
+          address: true,
         },
-        ...defaultOptions
-      }
+        ...defaultOptions,
+      };
     default:
       return defaultOptions;
   }

@@ -1,14 +1,21 @@
 import { Module } from '@nestjs/common';
 import { DeliveryAreaController } from './delivery-area/delivery-area.controller';
 import { DeliveryAreaService } from './delivery-area/delivery-area.service';
-import { CheckoutService } from './checkout/checkout.service';
-import { CheckoutController } from './checkout/checkout.controller';
-import { Checkout2Service } from './checkout/checkout2.service';
+import { CheckoutModule } from './checkout/checkout.module';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
-  imports: [],
-  providers: [DeliveryAreaService, CheckoutService, Checkout2Service],
-  controllers: [DeliveryAreaController, CheckoutController],
+  imports: [
+    CheckoutModule,
+    RouterModule.register([
+      {
+        path: 'checkout',
+        module: CheckoutModule,
+      },
+    ]),
+  ],
+  providers: [DeliveryAreaService],
+  controllers: [DeliveryAreaController],
   exports: [],
 })
 export class OrdersEntitiesModule {}

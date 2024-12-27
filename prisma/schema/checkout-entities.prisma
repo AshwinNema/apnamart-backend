@@ -34,6 +34,8 @@ model CheckoutSession {
   address           CheckoutAddress?
   items             CheckoutItem[]
   paymentMode       PaymentMode      @default(cash)
+  order             Order?           @relation(fields: [orderId], references: [id])
+  orderId           Int?             @unique()
   itemCount         Int
   isOrderCreated    Boolean          @default(false)
   hasSessionEnded   Boolean          @default(false)

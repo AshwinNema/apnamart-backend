@@ -90,6 +90,10 @@ export const validateConfig = (config: config) => {
     ola_maps: {
       api_key: configuration.OLA_MAPS_API_KEY,
     },
+    razorPay: {
+      key_id: configuration.RAZOR_PAY_KEY_ID,
+      key_secret: configuration.RAZOR_PAY_KEY_SECRET,
+    },
   };
 };
 

@@ -12,18 +12,21 @@ import {
   CheckoutAddressUpdate,
   CreateCheckoutValidation,
   IncreaseDecreaseCartItem,
+  ChangePaymentMode,
 } from 'src/validations';
 import { CheckoutService } from './checkout.service';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { Checkout2Service } from './checkout2.service';
 import { UserInterface } from 'src/interfaces';
+import { Checkout3Service } from './checkout3.service';
 
-@Controller('checkout')
+@Controller()
 export class CheckoutController {
   constructor(
     private checkoutService: CheckoutService,
     private checkoutService2: Checkout2Service,
+    private checkoutService3: Checkout3Service,
   ) {}
 
   @Roles(UserRole.customer)
@@ -68,5 +71,19 @@ export class CheckoutController {
     @User() user,
   ) {
     return this.checkoutService2.removeCheckoutItem(itemId, user.id);
+  }
+
+  @Roles(UserRole.customer)
+  @Put('change-paymentMode/:sessionId')
+  changePaymentMode(
+    @Param('sessionId', ParseIntPipe) sessionId: number,
+    @Body() { paymentMode }: ChangePaymentMode,
+    @User() user,
+  ) {
+    return this.checkoutService3.changePaymentMode(
+      sessionId,
+      user.id,
+      paymentMode,
+    );
   }
 }

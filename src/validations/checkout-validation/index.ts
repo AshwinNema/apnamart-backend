@@ -12,8 +12,8 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { LatLng } from './common.validation';
-import { AddressType } from '@prisma/client';
+import { LatLng } from '../common.validation';
+import { AddressType, PaymentMode } from '@prisma/client';
 
 export class CheckoutItem {
   @Min(1)
@@ -55,4 +55,9 @@ export class CheckoutAddressUpdate extends LatLng {
   @IsNotEmpty()
   @IsString()
   otherAddress: string;
+}
+
+export class ChangePaymentMode {
+  @IsEnum(PaymentMode)
+  paymentMode: PaymentMode;
 }

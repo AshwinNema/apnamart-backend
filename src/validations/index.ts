@@ -44,4 +44,4 @@ export * from './item-validation';
 export * from './merchant-validations';
 export * from './communication';
 export * from './customer.validation';
-export * from './checkout.validation';
+export * from './checkout-validation';

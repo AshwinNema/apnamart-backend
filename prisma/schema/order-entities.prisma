@@ -36,7 +36,10 @@ model Order {
   cancellationTime   DateTime?
   cancellationReason String?
   paymentMode        PaymentMode
+  session            CheckoutSession?
+  paymentStatus      PaymentStatus            @default(yet_to_pay)
   address            OrderAddress?
+  razorPayOrderId    String?
   razorpayPaymentId  String?
   stripePaymentId    String?
   orderItems         OrderItem[]

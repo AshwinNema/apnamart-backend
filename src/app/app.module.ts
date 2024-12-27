@@ -18,11 +18,16 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
 import prisma from 'src/prisma/client';
 import { OrdersEntitiesModule } from 'src/orders-entities/orders-entities.module';
 import { CommunicationModule } from 'src/communication/communication.module';
+import { RazorpayModule } from 'nestjs-razorpay';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate: validateConfig }),
     ScheduleModule.forRoot(),
+    RazorpayModule.forRoot({
+      key_id: process.env.RAZOR_PAY_KEY_ID,
+      key_secret: process.env.RAZOR_PAY_KEY_SECRET,
+    }),
     CommunicationModule,
     AuthModule,
     CronModule,
