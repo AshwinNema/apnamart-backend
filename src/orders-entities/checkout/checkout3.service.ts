@@ -44,7 +44,7 @@ export class Checkout3Service {
               sessionId: sessionId,
             },
           });
-          update.razorpayPaymentId = order.id;
+          update.razorPayOrderId = order.id;
         }
         break;
       default:

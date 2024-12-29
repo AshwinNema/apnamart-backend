@@ -5,6 +5,8 @@ export enum environments {
   development = 'development',
   test = 'test',
 }
+
+const booleanTransformer = z.string().transform((val) => val === 'true');
 interface config {
   NODE_ENV: environments;
   PORT: number;
@@ -27,6 +29,9 @@ interface config {
   OLA_MAPS_API_KEY: string;
   RAZOR_PAY_KEY_ID: string;
   RAZOR_PAY_KEY_SECRET: string;
+  ENABLE_NG_ROK: boolean;
+  NGROK_AUTHTOKEN: string;
+  RAZORPAY_WEBHOOK_SECRET: string;
 }
 
 const envVarsSchema = z.object({
@@ -45,7 +50,7 @@ const envVarsSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
-  ENABLE_PRISMA_LOGGING: z.coerce.boolean().default(false),
+  ENABLE_PRISMA_LOGGING: booleanTransformer,
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_REDIRECT_URL: z.string(),
@@ -55,6 +60,9 @@ const envVarsSchema = z.object({
   OLA_MAPS_API_KEY: z.string(),
   RAZOR_PAY_KEY_ID: z.string(),
   RAZOR_PAY_KEY_SECRET: z.string(),
+  ENABLE_NG_ROK: booleanTransformer,
+  NGROK_AUTHTOKEN: z.string(),
+  RAZORPAY_WEBHOOK_SECRET: z.string(),
 });
 
 export const validateConfig = (config: config) => {
@@ -93,6 +101,11 @@ export const validateConfig = (config: config) => {
     razorPay: {
       key_id: configuration.RAZOR_PAY_KEY_ID,
       key_secret: configuration.RAZOR_PAY_KEY_SECRET,
+      webhook_secret: configuration.RAZORPAY_WEBHOOK_SECRET,
+    },
+    ngRok: {
+      enableNgRok: configuration.ENABLE_NG_ROK,
+      token: configuration.NGROK_AUTHTOKEN,
     },
   };
 };

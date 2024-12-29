@@ -7,5 +7,9 @@ export class RazorPayPaymentValidation {
 
   @IsString()
   @IsNotEmpty()
+  razorpay_order_id: string;
+
+  @IsString()
+  @IsNotEmpty()
   razorpay_signature: string;
 }

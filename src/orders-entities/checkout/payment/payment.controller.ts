@@ -1,22 +1,23 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { PaymentService } from './payment.service';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { RazorPayPaymentValidation } from 'src/validations/checkout-validation/payment.validation';
-import { User } from 'src/decorators';
+import { SkipAccessAuth } from 'src/auth/jwt/access.jwt';
+import { RazorpayPaymentService } from '../razorpay-payment/razorpay-payment.service';
 
 @Controller('payment')
 export class PaymentController {
-  constructor(private paymentService: PaymentService) {}
+  constructor(private razorpayPaymentService: RazorpayPaymentService) {}
 
-  @Post('verify-razorpay-signature/:sessionId')
-  verifyRazorPaySignature(
-    @Param('sessionId', ParseIntPipe) sessionId: number,
-    @Body() body: RazorPayPaymentValidation,
-    @User() user,
-  ) {
-    return this.paymentService.verifyRazorpaySignature(
+  @Post('verify-razorpay-signature')
+  verifyRazorPaySignature(@Body() body: RazorPayPaymentValidation) {
+    return this.razorpayPaymentService.verifyRazorpaySignature(body);
+  }
+
+  @SkipAccessAuth()
+  @Post('razorpay-webhook')
+  razorPayWebhook(@Req() req, @Body() body) {
+    return this.razorpayPaymentService.validateRazorpayPayment(
+      req.headers['x-razorpay-signature'],
       body,
-      sessionId,
-      user.id,
     );
   }
 }

@@ -28,20 +28,20 @@ model CheckoutAddress {
 }
 
 model CheckoutSession {
-  id                Int              @id @default(autoincrement())
-  customer          User             @relation(fields: [customerId], references: [id])
-  customerId        Int
-  address           CheckoutAddress?
-  items             CheckoutItem[]
-  paymentMode       PaymentMode      @default(cash)
-  order             Order?           @relation(fields: [orderId], references: [id])
-  orderId           Int?             @unique()
-  itemCount         Int
-  isOrderCreated    Boolean          @default(false)
-  hasSessionEnded   Boolean          @default(false)
-  razorpayPaymentId String?
-  stripePaymentId   String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  archive           Boolean          @default(false)
+  id              Int              @id @default(autoincrement())
+  customer        User             @relation(fields: [customerId], references: [id])
+  customerId      Int
+  address         CheckoutAddress?
+  items           CheckoutItem[]
+  paymentMode     PaymentMode      @default(cash)
+  order           Order?           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId         Int?             @unique()
+  itemCount       Int
+  isOrderCreated  Boolean          @default(false)
+  hasSessionEnded Boolean          @default(false)
+  razorPayOrderId String?
+  stripePaymentId String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  archive         Boolean          @default(false)
 }

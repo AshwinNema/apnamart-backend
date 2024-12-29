@@ -17,6 +17,7 @@ export const validateUpdateAddress = async (
       sessionId,
       session: {
         customerId,
+        hasSessionEnded: false,
       },
     },
   });

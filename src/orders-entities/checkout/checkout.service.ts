@@ -11,7 +11,6 @@ import {
   validateCheckoutItems,
   validateUpdateAddress,
 } from './utils';
-import * as _ from 'lodash';
 
 @Injectable()
 export class CheckoutService {

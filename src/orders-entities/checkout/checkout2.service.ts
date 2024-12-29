@@ -20,7 +20,7 @@ export class Checkout2Service {
       throw new BadRequestException('Session not found');
     }
 
-    if (!session.razorpayPaymentId && !session.stripePaymentId) {
+    if (!session.razorPayOrderId && !session.stripePaymentId) {
       await prisma.checkoutSession.delete({
         where: { id: sessionId },
       });
@@ -46,6 +46,7 @@ export class Checkout2Service {
         id: itemId,
         session: {
           customerId,
+          hasSessionEnded: false,
         },
       },
       include: {
@@ -85,6 +86,7 @@ export class Checkout2Service {
         id: itemId,
         session: {
           customerId,
+          hasSessionEnded: false,
         },
       },
     });

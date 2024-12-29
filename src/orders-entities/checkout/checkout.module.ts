@@ -4,15 +4,15 @@ import { CheckoutService } from './checkout.service';
 import { Checkout2Service } from './checkout2.service';
 import { Checkout3Service } from './checkout3.service';
 import { PaymentController } from './payment/payment.controller';
-import { PaymentService } from './payment/payment.service';
 import { OrderService } from '../order/order.service';
+import { RazorpayPaymentService } from './razorpay-payment/razorpay-payment.service';
 
 @Module({
   providers: [
     CheckoutService,
     Checkout2Service,
     Checkout3Service,
-    PaymentService,
+    RazorpayPaymentService,
     OrderService,
   ],
   controllers: [CheckoutController, PaymentController],

@@ -2,7 +2,6 @@ import { BadRequestException } from '@nestjs/common';
 import { UserInterface } from 'src/interfaces';
 import prisma from 'src/prisma/client';
 import { CheckoutItem } from 'src/validations';
-import * as _ from 'lodash';
 
 const getProductMap = async (productIds: number[]) => {
   const productList = await prisma.product.findMany({

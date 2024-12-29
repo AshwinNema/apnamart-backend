@@ -15,12 +15,13 @@ import { processNestedValidationError } from './utils';
 import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
+  const configService = new ConfigService();
   const app = await NestFactory.create(AppModule, {
     cors: true,
     rawBody: true,
   });
   const adapterHost = app.get(HttpAdapterHost);
-  const port = new ConfigService().get('port');
+  const port = configService.get('port');
 
   app.setGlobalPrefix('v2', {
     exclude: [{ path: 'health', method: RequestMethod.GET }],
@@ -42,7 +43,19 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
-  await app.listen(port);
+
+  await app.listen(port, async () => {
+    // This is for local testing only
+    const enableNgRok = configService.get('ENABLE_NG_ROK') === 'true';
+    if (!enableNgRok) return;
+    const ngRok = require('@ngrok/ngrok');
+    const builder = new ngRok.SessionBuilder();
+    const session = await builder.authtokenFromEnv().connect();
+    const listener = await session.httpEndpoint().listen();
+    console.log('Ingress established at:', listener.url());
+    const localHostUrl = `localhost:${port}`;
+    listener.forward(localHostUrl);
+  });
 }
 
 bootstrap();
