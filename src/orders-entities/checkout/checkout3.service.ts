@@ -4,10 +4,15 @@ import prisma from 'src/prisma/client';
 import { InjectRazorpay } from 'nestjs-razorpay';
 import Razorpay from 'razorpay';
 import { getTotalOrderPrice } from './utils';
+import { StripePaymentService } from './stripe-payment/stripe-payment.service';
 
 @Injectable()
 export class Checkout3Service {
-  constructor(@InjectRazorpay() private readonly razorpayClient: Razorpay) {}
+  stripeClient;
+  constructor(
+    @InjectRazorpay() private readonly razorpayClient: Razorpay,
+    private stripeService: StripePaymentService,
+  ) {}
 
   async changePaymentMode(
     sessionId: number,
@@ -45,6 +50,20 @@ export class Checkout3Service {
             },
           });
           update.razorPayOrderId = order.id;
+          update.stripePaymentId = null;
+          update.stripeClientSecret = null;
+        }
+        break;
+
+      case PaymentMode.stripe:
+        {
+          if (!session.stripeClientSecret) {
+            const paymentIntent = await this.stripeService.createPaymentIntent(
+              totalPrice,
+              sessionId,
+            );
+            update.stripeClientSecret = paymentIntent.client_secret;
+          }
         }
         break;
       default:

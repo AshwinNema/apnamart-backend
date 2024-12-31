@@ -41,7 +41,6 @@ model Order {
   address            OrderAddress?
   razorPayOrderId    String?
   razorpayPaymentId  String?
-  stripePaymentId    String?
   orderItems         OrderItem[]
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt

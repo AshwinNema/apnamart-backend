@@ -6,6 +6,7 @@ import { Checkout3Service } from './checkout3.service';
 import { PaymentController } from './payment/payment.controller';
 import { OrderService } from '../order/order.service';
 import { RazorpayPaymentService } from './razorpay-payment/razorpay-payment.service';
+import { StripePaymentService } from './stripe-payment/stripe-payment.service';
 
 @Module({
   providers: [
@@ -14,6 +15,7 @@ import { RazorpayPaymentService } from './razorpay-payment/razorpay-payment.serv
     Checkout3Service,
     RazorpayPaymentService,
     OrderService,
+    StripePaymentService,
   ],
   controllers: [CheckoutController, PaymentController],
 })
