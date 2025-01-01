@@ -10,6 +10,12 @@ enum PaymentMode {
   cash
 }
 
+enum PaymentStatus {
+  confirmed
+  yet_to_pay
+  failed
+}
+
 enum OrderCancellationEntity {
   merchant
   user

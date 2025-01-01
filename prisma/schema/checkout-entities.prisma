@@ -1,0 +1,47 @@
+model CheckoutItem {
+  id        Int             @id @default(autoincrement())
+  name      String
+  quantity  Float
+  price     Float
+  product   Product         @relation(fields: [productId], references: [id])
+  productId Int
+  session   CheckoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId Int
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  archive   Boolean         @default(false)
+}
+
+model CheckoutAddress {
+  id           Int             @id @default(autoincrement())
+  session      CheckoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId    Int             @unique
+  latitude     Decimal
+  longtitude   Decimal
+  addressType  AddressType
+  addressLine1 String
+  addressLine2 String
+  otherAddress String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  archive      Boolean         @default(false)
+}
+
+model CheckoutSession {
+  id                 Int              @id @default(autoincrement())
+  customer           User             @relation(fields: [customerId], references: [id])
+  customerId         Int
+  address            CheckoutAddress?
+  items              CheckoutItem[]
+  paymentMode        PaymentMode      @default(cash)
+  order              Order?           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId            Int?             @unique()
+  itemCount          Int
+  isOrderCreated     Boolean          @default(false)
+  hasSessionEnded    Boolean          @default(false)
+  razorPayOrderId    String?
+  stripeClientSecret String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  archive            Boolean          @default(false)
+}

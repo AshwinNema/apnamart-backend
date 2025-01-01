@@ -52,13 +52,13 @@ model User {
   product              Product[]
   itemFilterOption     ItemFilterOption[]
   subCategory          SubCategory[]
-  orderMerchant        Order[]            @relation("OrderMerchant")
-  orderCustomer        Order[]            @relation("OrderCustomer")
+  orderCustomer        Order[]
   deliveryArea         DeliveryArea[]
   items                Item[]
   notifications        Notification[]
   sender               Chat[]             @relation("Sender")
   receiver             Chat[]             @relation("Receiver")
+  checkoutSession      CheckoutSession[]
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
   isBlackListed        Boolean            @default(false)

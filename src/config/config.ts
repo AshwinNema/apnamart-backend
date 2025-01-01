@@ -1,31 +1,7 @@
 import { z } from 'zod';
+import { environments, config } from './interfaces & constants';
 
-export enum environments {
-  production = 'production',
-  development = 'development',
-  test = 'test',
-}
-interface config {
-  NODE_ENV: environments;
-  PORT: number;
-  DATABASE_URL: string;
-  DIRECT_URL: string;
-  JWT_ACCESS_EXPIRATION: number;
-  JWT_REFRESH_EXPIRATION: number;
-  JWT_ACCESS_SECRET: string;
-  JWT_REFRESH_SECRET: string;
-  CLOUDINARY_CLOUD_NAME: string;
-  CLOUDINARY_API_KEY: string;
-  CLOUDINARY_API_SECRET: string;
-  ENABLE_PRISMA_LOGGING: string;
-  GOOGLE_CLIENT_ID: string;
-  GOOGLE_CLIENT_SECRET: string;
-  GOOGLE_REDIRECT_URL: string;
-  TWITTER_CONSUMER_KEY: string;
-  TWITTER_CONSUMER_SECRET: string;
-  TWITTER_OAUTH_CALLBACK: string;
-  OLA_MAPS_API_KEY: string;
-}
+const booleanTransformer = z.string().transform((val) => val === 'true');
 
 const envVarsSchema = z.object({
   NODE_ENV: z.enum([
@@ -43,7 +19,7 @@ const envVarsSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
-  ENABLE_PRISMA_LOGGING: z.coerce.boolean().default(false),
+  ENABLE_PRISMA_LOGGING: booleanTransformer,
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_REDIRECT_URL: z.string(),
@@ -51,6 +27,13 @@ const envVarsSchema = z.object({
   TWITTER_CONSUMER_SECRET: z.string(),
   TWITTER_OAUTH_CALLBACK: z.string(),
   OLA_MAPS_API_KEY: z.string(),
+  RAZOR_PAY_KEY_ID: z.string(),
+  RAZOR_PAY_KEY_SECRET: z.string(),
+  ENABLE_NG_ROK: booleanTransformer,
+  NGROK_AUTHTOKEN: z.string(),
+  RAZORPAY_WEBHOOK_SECRET: z.string(),
+  STRIPE_API_KEY: z.string(),
+  STRIPE_WEBHOOK_SECRET: z.string(),
 });
 
 export const validateConfig = (config: config) => {
@@ -85,6 +68,19 @@ export const validateConfig = (config: config) => {
     },
     ola_maps: {
       api_key: configuration.OLA_MAPS_API_KEY,
+    },
+    razorPay: {
+      key_id: configuration.RAZOR_PAY_KEY_ID,
+      key_secret: configuration.RAZOR_PAY_KEY_SECRET,
+      webhook_secret: configuration.RAZORPAY_WEBHOOK_SECRET,
+    },
+    ngRok: {
+      enableNgRok: configuration.ENABLE_NG_ROK,
+      token: configuration.NGROK_AUTHTOKEN,
+    },
+    stripe: {
+      api_key: configuration.STRIPE_API_KEY,
+      webhook_secret: configuration.STRIPE_WEBHOOK_SECRET,
     },
   };
 };

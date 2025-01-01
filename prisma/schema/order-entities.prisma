@@ -1,29 +1,46 @@
 model OrderItem {
   id        Int      @id @default(autoincrement())
+  name      String
   quantity  Float
   price     Float
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   archive   Boolean  @default(false)
 }
 
+model OrderAddress {
+  id           Int         @id @default(autoincrement())
+  order        Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId      Int         @unique
+  latitude     Decimal
+  longtitude   Decimal
+  addressType  AddressType
+  addressLine1 String
+  addressLine2 String
+  otherAddress String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  archive      Boolean     @default(false)
+}
+
 model Order {
   id                 Int                      @id @default(autoincrement())
-  merchant           User                     @relation("OrderMerchant", fields: [merchantId], references: [id])
-  merchantId         Int
-  customer           User                     @relation("OrderCustomer", fields: [customerId], references: [id])
+  customer           User                     @relation(fields: [customerId], references: [id])
   customerId         Int
   totalOrderAmount   Float
   cancellationUser   OrderCancellationEntity?
   cancellationTime   DateTime?
   cancellationReason String?
   paymentMode        PaymentMode
+  session            CheckoutSession?
+  paymentStatus      PaymentStatus            @default(yet_to_pay)
+  address            OrderAddress?
+  razorPayOrderId    String?
   razorpayPaymentId  String?
-  stripePaymentId    String?
   orderItems         OrderItem[]
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt

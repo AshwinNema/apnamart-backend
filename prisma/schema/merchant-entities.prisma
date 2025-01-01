@@ -35,6 +35,7 @@ model Product {
   user                 User               @relation(fields: [merchant], references: [id])
   merchant             Int
   orderItem            OrderItem[]
+  checkoutItem         CheckoutItem[]
   wishList             WishList[]
   allowedUnitsPerOrder Int                @default(1)
   available            Boolean            @default(true)
