@@ -8,34 +8,6 @@ import { IncreaseDecreaseCartItem } from 'src/validations';
 
 @Injectable()
 export class Checkout2Service {
-  async endCheckoutSession(sessionId: number, customerId: number) {
-    const session = await prisma.checkoutSession.findUnique({
-      where: {
-        id: sessionId,
-        customerId,
-      },
-    });
-
-    if (!session) {
-      throw new BadRequestException('Session not found');
-    }
-
-    if (!session.razorPayOrderId && !session.stripePaymentId) {
-      await prisma.checkoutSession.delete({
-        where: { id: sessionId },
-      });
-      return;
-    }
-    await prisma.checkoutSession.update({
-      where: {
-        id: sessionId,
-      },
-      data: {
-        hasSessionEnded: true,
-      },
-    });
-  }
-
   async changeItemQuantity(
     itemId: number,
     changeDetails: IncreaseDecreaseCartItem,

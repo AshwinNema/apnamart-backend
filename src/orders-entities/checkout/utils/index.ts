@@ -4,6 +4,7 @@ import { DeliveryAreaService } from 'src/orders-entities/delivery-area/delivery-
 import prisma from 'src/prisma/client';
 import { LatLng } from 'src/validations';
 import * as _ from 'lodash';
+import { PaymentMode } from '@prisma/client';
 
 export * from './create-checkout';
 
@@ -52,6 +53,37 @@ export const getUserAddress = async (user: UserInterface) => {
     'otherAddress',
   ]);
   return addressDetails;
+};
+
+export const validateAndGetOrderSession = async (
+  transaction,
+  sessionId,
+  additionalSessionFilter,
+  isCashOrder,
+) => {
+  const sessionDetails = await transaction.checkoutSession.findUnique({
+    where: {
+      id: sessionId,
+      hasSessionEnded: false,
+      ...additionalSessionFilter,
+    },
+    include: { address: true, items: true },
+  });
+
+  if (!sessionDetails) {
+    return { msg: 'Session not found' };
+  }
+  if (isCashOrder && sessionDetails.paymentMode !== PaymentMode.cash) {
+    throw new BadRequestException('Order is not a cash order');
+  }
+
+  const { items } = sessionDetails;
+
+  if (!items.length) {
+    throw new BadRequestException('There are no items in the order');
+  }
+
+  return sessionDetails;
 };
 
 export const getTotalOrderPrice = <

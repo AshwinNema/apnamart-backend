@@ -50,8 +50,6 @@ export class Checkout3Service {
             },
           });
           update.razorPayOrderId = order.id;
-          update.stripePaymentId = null;
-          update.stripeClientSecret = null;
         }
         break;
 

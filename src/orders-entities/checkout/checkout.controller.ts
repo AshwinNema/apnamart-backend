@@ -18,8 +18,8 @@ import { CheckoutService } from './checkout.service';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { Checkout2Service } from './checkout2.service';
-import { UserInterface } from 'src/interfaces';
 import { Checkout3Service } from './checkout3.service';
+import { OrderService } from '../order/order.service';
 
 @Controller()
 export class CheckoutController {
@@ -27,6 +27,7 @@ export class CheckoutController {
     private checkoutService: CheckoutService,
     private checkoutService2: Checkout2Service,
     private checkoutService3: Checkout3Service,
+    private orderService: OrderService,
   ) {}
 
   @Roles(UserRole.customer)
@@ -43,15 +44,6 @@ export class CheckoutController {
     @User() user,
   ) {
     return this.checkoutService.updateDeliveryAddress(sessionId, details, user);
-  }
-
-  @Roles(UserRole.customer)
-  @Put('end/:sessionId')
-  endCheckoutSession(
-    @Param('sessionId', ParseIntPipe) sessionId: number,
-    @User() user: UserInterface,
-  ) {
-    return this.checkoutService2.endCheckoutSession(sessionId, user.id);
   }
 
   @Roles(UserRole.customer)
@@ -84,6 +76,20 @@ export class CheckoutController {
       sessionId,
       user.id,
       paymentMode,
+    );
+  }
+
+  @Roles(UserRole.customer)
+  @Post('place-order/:sessionId')
+  createCheckoutOrder(
+    @Param('sessionId', ParseIntPipe) sessionId: number,
+    @User() user,
+  ) {
+    return this.orderService.createOrder(
+      sessionId,
+      {},
+      { customerId: user.id },
+      true,
     );
   }
 }
