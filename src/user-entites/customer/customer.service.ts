@@ -13,6 +13,7 @@ export class CustomerService {
           select: {
             id: true,
             name: true,
+            photo: true,
             items: {
               select: {
                 id: true,
