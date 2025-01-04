@@ -15,6 +15,7 @@ import { Product2Service } from 'src/item-entities/product/product2.service';
 import { CommonService } from 'src/common/common.service';
 import { CustomerCartService } from './customer/customer-cart.service';
 import { DeliveryAreaService } from 'src/orders-entities/delivery-area/delivery-area.service';
+import { CustomerOrderService } from './customer/customer-order/customer-order.service';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { DeliveryAreaService } from 'src/orders-entities/delivery-area/delivery-
     CommonService,
     CustomerCartService,
     DeliveryAreaService,
+    CustomerOrderService,
   ],
   controllers: [AdminController, CustomerController, UserController],
   exports: [AdminService, CustomerService, UserService],

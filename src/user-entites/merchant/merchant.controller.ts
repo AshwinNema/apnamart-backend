@@ -1,10 +1,10 @@
 import { Controller, Get, Put, Query, UsePipes } from '@nestjs/common';
 import { MerchantService } from './merchant.service';
-import { QueryMerchants } from 'src/validations';
+import { paginationOptions, QueryMerchants } from 'src/validations';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { ValidateMerchantToBlock } from './utils';
-import { RequestProcessor } from 'src/decorators';
+import { RequestProcessor, User } from 'src/decorators';
 import { MerchantRegistration2Service } from './merchant-registration/merchant-registration2.service';
 
 @Controller()
@@ -25,5 +25,11 @@ export class MerchantController {
   @Put('block-unblock')
   blockUnbloickMerchant(@RequestProcessor() req) {
     return this.merchantRegistrationService.banremoveBanMerchat(req.body);
+  }
+
+  @Roles(UserRole.merchant)
+  @Get('orders')
+  queryMerchantOrders(@User() user, @Query() query: paginationOptions) {
+    return this.merchantService.queryMerchantOrders(user.id, query);
   }
 }
