@@ -33,6 +33,7 @@ model Order {
   customerId         Int
   totalOrderAmount   Float
   cancellationUser   OrderCancellationEntity?
+  orderStatus        OrderStatus              @default(order_accepted)
   cancellationTime   DateTime?
   cancellationReason String?
   paymentMode        PaymentMode

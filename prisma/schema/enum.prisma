@@ -16,6 +16,13 @@ enum PaymentStatus {
   failed
 }
 
+enum OrderStatus {
+  order_accepted
+  out_for_delivery
+  cancelled
+  delivered
+}
+
 enum OrderCancellationEntity {
   merchant
   user

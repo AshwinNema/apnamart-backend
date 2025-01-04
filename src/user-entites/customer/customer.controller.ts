@@ -14,17 +14,20 @@ import {
   AddRemoveWishlistItem,
   booleanEnum,
   IncreaseDecreaseCartItem,
+  paginationOptions,
 } from 'src/validations';
 import { Roles } from 'src/auth/role/role.guard';
 import { UserRole } from '@prisma/client';
 import { User } from 'src/decorators';
 import { CustomerCartService } from './customer-cart.service';
+import { CustomerOrderService } from './customer-order/customer-order.service';
 
 @Controller('customer')
 export class CustomerController {
   constructor(
     private customerService: CustomerService,
     private customerCartService: CustomerCartService,
+    private customerOrderService: CustomerOrderService,
   ) {}
 
   @SkipAccessAuth()
@@ -86,5 +89,11 @@ export class CustomerController {
       body.change,
       body.quantity,
     );
+  }
+
+  @Roles(UserRole.customer)
+  @Get('orders')
+  queryOrders(@User() user, @Query() query: paginationOptions) {
+    return this.customerOrderService.queryCustomerOrders(user.id, query);
   }
 }
