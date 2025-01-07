@@ -13,6 +13,7 @@ import { LoggingInterceptor } from './logger/logger.interceptor';
 import { ValidationError } from 'class-validator';
 import { processNestedValidationError } from './utils';
 import { WsAdapter } from '@nestjs/platform-ws';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const configService = new ConfigService();
@@ -20,6 +21,16 @@ async function bootstrap() {
     cors: true,
     rawBody: true,
   });
+  const config = new DocumentBuilder()
+    .setTitle('Apnamart Api')
+    .setDescription('Backend apis to work with front end')
+    .setVersion('2.0')
+    .addTag('Ecommerce')
+    .addBearerAuth()
+    .build();
+
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
   const adapterHost = app.get(HttpAdapterHost);
   const port = configService.get('port');
 

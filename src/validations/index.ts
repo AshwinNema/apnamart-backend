@@ -1,9 +1,21 @@
+import { ApiPropertyOptions } from '@nestjs/swagger';
 import {
   registerDecorator,
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
 import { z } from 'zod';
+
+export const multiFileApiDefinition = (
+  required?: boolean,
+): ApiPropertyOptions => ({
+  type: 'array',
+  items: {
+    type: 'string',
+    format: 'binary',
+  },
+  required: !!required,
+});
 
 export function IsNull(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
@@ -38,7 +50,7 @@ export * from './category.validation';
 export * from './subcategory.validation';
 export * from './common.validation';
 export * from './product';
-export * from './user.validation';
+export * from './user-validation';
 export * from './delivery-location.validation';
 export * from './item-validation';
 export * from './merchant-validations';

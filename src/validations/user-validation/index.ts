@@ -1,21 +1,27 @@
-import { AddressType, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
-  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  Matches,
-  ValidateIf,
+  Max,
+  Min,
 } from 'class-validator';
 import { HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
-import { mimeTypes, passwordValidation } from 'src/utils';
-import { LatLng } from './common.validation';
+import { mimeTypes } from 'src/utils';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export * from './update-validations';
 
 export class ProfilePhotoValidation {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Profile photo file',
+  })
   @IsFile()
   @MaxFileSize(6e6, { message: 'Maximum size of the file must be 6 mega byte' })
   @HasMimeType(mimeTypes.image, {
@@ -25,6 +31,11 @@ export class ProfilePhotoValidation {
 }
 
 export class ProfileValidation {
+  @ApiProperty({
+    enum: UserRole,
+    description: 'Role of the user',
+    example: UserRole.customer,
+  })
   @IsEnum(UserRole)
   @IsString()
   @IsNotEmpty()
@@ -32,60 +43,36 @@ export class ProfileValidation {
 }
 
 export class QueryLocations {
+  @ApiProperty({
+    description: 'Search query for locations',
+    example: 'New York',
+  })
   @IsNotEmpty()
   @IsString()
   input: string;
 }
 
 export class GetAddress {
+  @ApiProperty({ description: 'Latitude of the address', example: 40.7128 })
+  @Min(-90)
+  @Max(90)
   @IsNumber()
   @Type(() => Number)
   lat: number;
 
+  @ApiProperty({ description: 'Longitude of the address', example: -74.006 })
+  @Min(-180)
+  @Max(180)
   @IsNumber()
   @Type(() => Number)
   lng: number;
 }
 
-export class UpdateUserAddress extends LatLng {
-  @IsEnum(AddressType)
-  @IsString()
-  addressType: AddressType;
-
-  @IsNotEmpty()
-  @IsString()
-  addressLine1: string;
-
-  @IsNotEmpty()
-  @IsString()
-  addressLine2: string;
-
-  @ValidateIf((location) => location.addressType === AddressType.others)
-  @IsNotEmpty()
-  @IsString()
-  otherAddress: string;
-}
-
-export class UpdateUserProfile {
-  @IsEmail()
-  @IsOptional()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  name: string;
-
-  @Matches(passwordValidation.regex, {
-    message: passwordValidation.message,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  password: string;
-}
-
 export class GetUserProfile {
+  @ApiPropertyOptional({
+    description: 'Flag to get merchant details',
+    example: true,
+  })
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)

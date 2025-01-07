@@ -16,6 +16,7 @@ import {
 import { ClassConstructor } from '../utils/types';
 import { ValidatedObject } from '../interfaces';
 import { processNestedValidationError } from 'src/utils';
+import { ApiProperty } from '@nestjs/swagger';
 
 export const validateObject = async <T extends object>(
   object: object,
@@ -45,11 +46,13 @@ export interface paginationOptionsInterface {
 }
 
 export class paginationOptions {
+  @ApiProperty({ description: 'Page number', example: 1 })
   @Min(1)
   @IsInt()
   @Type(() => Number)
   page: number;
 
+  @ApiProperty({ description: 'Number of items per page', example: 10 })
   @Min(1)
   @IsInt()
   @Type(() => Number)
@@ -57,18 +60,21 @@ export class paginationOptions {
 }
 
 export class SearchByName {
+  @ApiProperty({ description: 'Name to search for', example: 'John Doe' })
   @IsNotEmpty()
   @IsString()
   name: string;
 }
 
 export class LatLng {
+  @ApiProperty({ description: 'Latitude coordinate', example: 37.7749 })
   @Min(-90)
   @Max(90)
   @IsNumber()
   @Type(() => Number)
   latitude: number;
 
+  @ApiProperty({ description: 'Longitude coordinate', example: -122.4194 })
   @Min(-180)
   @Max(180)
   @IsNumber()

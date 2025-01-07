@@ -3,8 +3,10 @@ import { HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes } from 'src/utils';
 import { paginationOptions } from './common.validation';
 import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class QuerySubCategories extends paginationOptions {
+  @ApiPropertyOptional({ description: 'Id of the subcategory', example: 1 })
   @Min(1)
   @IsInt()
   @Type(() => Number)
@@ -13,10 +15,15 @@ export class QuerySubCategories extends paginationOptions {
 }
 
 export class SubCategoryValidator {
+  @ApiProperty({
+    description: 'Name of the subcategory',
+    example: 'Electronics',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({ description: 'Id of the category', example: 1 })
   @IsInt()
   @Min(1)
   @Type(() => Number)
@@ -24,6 +31,7 @@ export class SubCategoryValidator {
 }
 
 export class SubCatListValidator {
+  @ApiPropertyOptional({ description: 'Id of the category', example: 1 })
   @IsInt()
   @Min(1)
   @Type(() => Number)
@@ -32,6 +40,11 @@ export class SubCatListValidator {
 }
 
 export class SubcategoryUploadFile {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'File to be uploaded',
+  })
   @IsFile()
   @MaxFileSize(4e6, {
     message: 'Maximum size of the file should be 4 mega byte',
@@ -43,16 +56,24 @@ export class SubcategoryUploadFile {
 }
 
 export class CreateSubCatValidation extends SubcategoryUploadFile {
+  @ApiProperty({
+    description: 'Data related to the subcategory',
+  })
   @IsString()
   @IsNotEmpty()
   data: string;
 }
 
 export class UpdateSubCategoryValidation {
+  @ApiPropertyOptional({
+    description: 'Name of the subcategory',
+    example: 'Gaming',
+  })
   @IsOptional()
   @IsString()
   name: string;
 
+  @ApiPropertyOptional({ description: 'Id of the category', example: 1 })
   @Min(1)
   @IsInt()
   @IsOptional()

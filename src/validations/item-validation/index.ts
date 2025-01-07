@@ -1,24 +1,18 @@
-import {
-  ArrayUnique,
-  IsArray,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Min,
-  ValidateNested,
-} from 'class-validator';
+import { IsInt, IsOptional, Min } from 'class-validator';
 import { paginationOptions } from '../common.validation';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes } from 'src/utils';
-import {
-  CreateFilterValidation,
-  validateFilterType,
-} from './filter-subvalidations';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
 export * from './item-update';
+export * from './create.validation';
 
 export class QueryItems extends paginationOptions {
+  @ApiPropertyOptional({
+    description: 'Id of the item',
+    example: 1,
+  })
   @Min(1)
   @IsInt()
   @Type(() => Number)
@@ -27,6 +21,12 @@ export class QueryItems extends paginationOptions {
 }
 
 export class ItemFileUpload {
+  @ApiProperty({
+    description: 'Image file to be uploaded',
+    type: 'string',
+    format: 'binary',
+    example: 'image.jpg',
+  })
   @IsFile()
   @MaxFileSize(4e6, {
     message: 'Maximum size of the file should be 4 mega byte',
@@ -35,63 +35,25 @@ export class ItemFileUpload {
     message: 'File must be an image',
   })
   file: Express.Multer.File;
-}
-
-export class CreateItemValidation {
-  @IsOptional()
-  @IsFile()
-  @MaxFileSize(4e6, {
-    message: 'Maximum size of the file should be 4 mega byte',
-  })
-  @HasMimeType(mimeTypes.image, {
-    message: 'File must be an image',
-  })
-  file: Express.Multer.File;
-
-  @IsString()
-  @IsNotEmpty()
-  data: string;
-}
-
-export class CreateItemValidator {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  categoryId: number;
-
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  subCategoryId: number;
-
-  @Transform(validateFilterType())
-  @IsOptional()
-  @ArrayUnique((option) => option.name, {
-    message: 'All filter names should be unique',
-  })
-  @ValidateNested({ each: true })
-  @IsArray()
-  @Type(() => CreateFilterValidation)
-  filters: CreateFilterValidation[];
-}
-
-export class createItemFilterValidation extends CreateFilterValidation {
-  @Min(1)
-  @IsInt()
-  itemId: number;
 }
 
 export class getItemListValidation {
+  @ApiProperty({
+    description: 'Filter items by category id',
+    required: false,
+    example: 1,
+  })
   @Min(1)
   @IsInt()
   @IsOptional()
   @Type(() => Number)
   categoryId: number;
 
+  @ApiProperty({
+    description: 'Filter items by subcategory id',
+    required: false,
+    example: 1,
+  })
   @Min(1)
   @IsInt()
   @IsOptional()
