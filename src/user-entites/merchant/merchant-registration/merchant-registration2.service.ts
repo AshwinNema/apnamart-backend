@@ -47,15 +47,24 @@ export class MerchantRegistration2Service {
   }
 
   async banremoveBanMerchat(body: blockUnblockMerchant) {
-    await this.productService.updateManyProducts({
-      where: { merchant: body.userId },
-      data: { isBlocked: body.type === blockUnblockMerchantType.block },
-    });
-    return prisma.merchantDetails.update({
+    const updatedRegistration = await prisma.merchantDetails.update({
       where: { id: body.merchantRegistrationId },
       data: {
         isMerchantBlocked: body.type === blockUnblockMerchantType.block,
       },
     });
+
+    if (!updatedRegistration)
+      throw new BadRequestException('Merchant regstration not found');
+    if (updatedRegistration.userId !== body.userId) {
+      throw new BadRequestException(
+        'Merchant is not the user of the registration',
+      );
+    }
+    await this.productService.updateManyProducts({
+      where: { merchant: body.userId },
+      data: { isBlocked: body.type === blockUnblockMerchantType.block },
+    });
+    return updatedRegistration;
   }
 }

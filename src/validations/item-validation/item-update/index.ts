@@ -16,23 +16,44 @@ import {
   validateDeleteIds,
   validateFilterType,
 } from '../filter-subvalidations';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  newFiltersDefinition,
+  updateFiltersDefinition,
+} from './swagger-definitions';
 
 export class UpdateItem {
+  @ApiProperty({
+    description: 'Name of the item',
+    example: 'Mobile',
+    required: false,
+  })
   @IsString()
   @IsNotEmpty()
   @IsOptional()
   name: string;
 
+  @ApiProperty({
+    description: 'Id of the category',
+    example: 1,
+    required: false,
+  })
   @IsInt()
   @Min(1)
   @IsOptional()
   categoryId: number;
 
+  @ApiProperty({
+    description: 'Id of the sub category',
+    example: 1,
+    required: false,
+  })
   @IsInt()
   @Min(1)
   @IsOptional()
   subCategoryId: number;
 
+  @ApiProperty(newFiltersDefinition)
   @ArrayUnique((option) => option.name, {
     message: 'All new filter names should be unique',
   })
@@ -42,6 +63,12 @@ export class UpdateItem {
   @IsOptional()
   newFilters: CreateFilterValidation[];
 
+  @ApiProperty({
+    description: 'Ids of filters to be deleted',
+    type: [Number],
+    example: [1, 2, 3],
+    required: false,
+  })
   @Transform(validateDeleteIds('updateFilters', 'Filters'))
   @IsInt({ each: true })
   @IsArray()
@@ -49,6 +76,7 @@ export class UpdateItem {
   @IsOptional()
   deleteFilters: number[];
 
+  @ApiProperty(updateFiltersDefinition)
   @Transform(validateFilterType('newFilters', true))
   @Transform(
     validateDuplicatesNames(

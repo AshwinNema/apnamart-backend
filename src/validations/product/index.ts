@@ -1,15 +1,19 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { HasMimeType, IsFiles, MaxFileSize } from 'nestjs-form-data';
 import { mimeTypes } from 'src/utils';
+import { ApiProperty } from '@nestjs/swagger';
+import { multiFileApiDefinition } from '..';
 
 export * from './query-products';
 export * from './subvalidations';
 
 export class UpdateProductValidation {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   data: string;
 
+  @ApiProperty(multiFileApiDefinition())
   @IsFiles()
   @MaxFileSize(0.5e6, {
     each: true,
@@ -22,6 +26,7 @@ export class UpdateProductValidation {
   @IsOptional()
   productImages: Express.Multer.File[];
 
+  @ApiProperty(multiFileApiDefinition())
   @IsFiles()
   @MaxFileSize(4e6, {
     each: true,
@@ -34,6 +39,7 @@ export class UpdateProductValidation {
   @IsOptional()
   newDescriptionFiles: Express.Multer.File[];
 
+  @ApiProperty(multiFileApiDefinition())
   @IsFiles()
   @MaxFileSize(4e6, {
     each: true,
@@ -48,10 +54,12 @@ export class UpdateProductValidation {
 }
 
 export class CreateProductValidation {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   data: string;
 
+  @ApiProperty(multiFileApiDefinition())
   @IsFiles()
   @MaxFileSize(0.5e6, {
     each: true,
@@ -63,6 +71,7 @@ export class CreateProductValidation {
   })
   productImages: Express.Multer.File[];
 
+  @ApiProperty(multiFileApiDefinition())
   @IsFiles()
   @MaxFileSize(4e6, {
     each: true,
