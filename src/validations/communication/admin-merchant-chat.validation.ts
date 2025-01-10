@@ -14,7 +14,10 @@ export class initialAdminMerchantChat {
   @Type(() => Number)
   limit: number;
 
-  @ApiProperty({ enum: adminMerchantChatRole, example: adminMerchantChatRole.admin })
+  @ApiProperty({
+    enum: adminMerchantChatRole,
+    example: adminMerchantChatRole.admin,
+  })
   @IsEnum(adminMerchantChatRole)
   role: adminMerchantChatRole;
 
@@ -45,7 +48,10 @@ export class reinitiateMerchantAdminChat {
   @IsInt()
   cursor: number;
 
-  @ApiProperty({ enum: adminMerchantChatRole, example: adminMerchantChatRole.merchant })
+  @ApiProperty({
+    enum: adminMerchantChatRole,
+    example: adminMerchantChatRole.merchant,
+  })
   @IsEnum(adminMerchantChatRole)
   role: string;
 

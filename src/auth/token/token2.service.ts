@@ -13,7 +13,7 @@ export class TokenService2 {
   ) {}
 
   async deleteOneToken(deleteFilter) {
-    return prisma.token.delete({
+    await prisma.token.delete({
       where: deleteFilter,
     });
   }

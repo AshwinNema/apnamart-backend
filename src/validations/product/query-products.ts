@@ -13,7 +13,10 @@ export class QueryProducts extends paginationOptions {
 }
 
 export class QueryCustomerProducts extends paginationOptions {
-  @ApiPropertyOptional({ description: 'Item Id to which the product is linked', example: 1 })
+  @ApiPropertyOptional({
+    description: 'Item Id to which the product is linked',
+    example: 1,
+  })
   @Min(1)
   @IsInt()
   @Type(() => Number)
@@ -27,7 +30,10 @@ export class QueryCustomerProducts extends paginationOptions {
   @IsOptional()
   subCategoryId: number;
 
-  @ApiPropertyOptional({ description: 'Filter options as a comma-separated list of numbers', example: '1,2,3' })
+  @ApiPropertyOptional({
+    description: 'Filter options as a comma-separated list of numbers',
+    example: '1,2,3',
+  })
   @Transform(({ value }) => {
     return value.split(',').map((optionId) => Number(optionId));
   })

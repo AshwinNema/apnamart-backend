@@ -1,16 +1,9 @@
-import {
-  IsNotEmpty,
-  IsString,
-  Validate,
-} from 'class-validator';
-import {
-  CustomDigitLengthValidator,
-  LatLng,
-} from '../../common.validation';
+import { IsNotEmpty, IsString, Validate } from 'class-validator';
+import { CustomDigitLengthValidator, LatLng } from '../../common.validation';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export * from "./other-validations"
+export * from './other-validations';
 export class MerchantRegistrationDetails extends LatLng {
   @ApiProperty({
     example: 'Cloudtail pvt ltd',

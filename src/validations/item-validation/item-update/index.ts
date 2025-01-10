@@ -17,7 +17,10 @@ import {
   validateFilterType,
 } from '../filter-subvalidations';
 import { ApiProperty } from '@nestjs/swagger';
-import { newFiltersDefinition, updateFiltersDefinition } from './swagger-definitions';
+import {
+  newFiltersDefinition,
+  updateFiltersDefinition,
+} from './swagger-definitions';
 
 export class UpdateItem {
   @ApiProperty({

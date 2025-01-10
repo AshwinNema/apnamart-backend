@@ -8,7 +8,7 @@ import {
   IsString,
   IsEnum,
 } from 'class-validator';
-import { NonAdminRoleEnum, NonAdminRoles, passwordValidation } from 'src/utils';
+import { passwordValidation } from 'src/utils';
 
 export class LoginValidator {
   @ApiProperty({
@@ -61,17 +61,18 @@ export class LogoutValidator {
 
 export class RegisterAdminValidator {
   @ApiProperty({
-    example: 'admin@example.com',
-    description: "Admin's email address",
+    example: 'user@example.com',
+    description: "User's email address",
   })
   @Transform(({ value }) => value?.trim()?.toLowerCase())
   @IsEmail()
   @IsNotEmpty()
+  @IsString()
   email: string;
 
   @ApiProperty({
-    example: 'Admin Name',
-    description: "Admin's name",
+    example: 'User Name',
+    description: "User's name",
   })
   @IsString()
   @IsNotEmpty()
